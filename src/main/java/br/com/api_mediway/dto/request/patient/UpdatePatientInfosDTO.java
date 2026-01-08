@@ -1,6 +1,7 @@
 package br.com.api_mediway.dto.request.patient;
 
-import br.com.mediway_api.enums.Gender;
+
+import br.com.api_mediway.enums.Gender;
 
 import java.time.LocalDate;
 
