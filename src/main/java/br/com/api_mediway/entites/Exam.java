@@ -35,6 +35,7 @@ public class Exam {
 
     @Enumerated(EnumType.STRING)
     private ConsultationAndExmStatus status;
+    private LocalDate cancellationDate;
 
 }
 

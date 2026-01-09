@@ -12,5 +12,6 @@ import java.util.UUID;
 @Repository
 public interface ExamRepository extends JpaRepository<Exam, Long> {
     List<Exam> findByPatientInfosUserUserId(UUID patientId);
+    List<Exam> findByExamDate(LocalDate date);
     List<Exam> findByStatus(ConsultationAndExmStatus status);
 }
