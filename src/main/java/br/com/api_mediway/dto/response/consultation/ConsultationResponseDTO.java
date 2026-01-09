@@ -22,8 +22,8 @@ public record ConsultationResponseDTO(
             String specialty
     ) {}
     public record ConsultationDetailsDTO(
-            LocalDate date,
-            LocalTime startTime,
+            LocalDate  consultationDate,
+            LocalTime consultationTime,
             String localConsultation,
             String description,
             String requeriments

@@ -5,8 +5,9 @@ import java.time.LocalTime;
 
 public record ConsultationSummaryDTO(
         Long consultationId,
-        LocalDate date,
-        LocalTime startTime,
+        LocalDate  consultationDate,
+        LocalTime consultationTime,
+        String localConsultation,
         String status
 ) {
 }

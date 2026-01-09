@@ -1,5 +1,7 @@
 package br.com.api_mediway.dto.response.Exam;
 
+import br.com.api_mediway.enums.ConsultationAndExmStatus;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,11 +17,11 @@ public record ExamResponseDTO(
             String email
     ) {}
     public record ExamDetailsDTO(
+            LocalDate examDate,
+            LocalTime examTime,
             String typeExam,
             String requeriments,
-            LocalDate cancellationDate,
-            LocalDate date,
-            LocalTime startTime,
+            ConsultationAndExmStatus status,
             String local
     ) {}
 }
