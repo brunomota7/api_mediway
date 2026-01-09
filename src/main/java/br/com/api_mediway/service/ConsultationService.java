@@ -121,7 +121,15 @@ public class ConsultationService {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_CUIDADOR') or hasAuthority('SCOPE_MEDICO')")
     public List<ConsultationResponseDTO> getConsultationsByDate(LocalDate date) {
         log.info("[CONSULTATION] Fetching consultations for date={}", date);
-        return consultationRepository.findBySlotDate(date)
+        return consultationRepository.findByConsultationDate(date)
+                .stream()
+                .map(ConsultationMapper::toResponse)
+                .toList();
+    }
+
+    public List<ConsultationResponseDTO> getConsultationByStatus(ConsultationAndExmStatus status) {
+        log.info("[CONSULTATION] Fetching consultations for status={}", status);
+        return consultationRepository.findByStatus(status)
                 .stream()
                 .map(ConsultationMapper::toResponse)
                 .toList();

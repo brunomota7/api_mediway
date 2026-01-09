@@ -83,6 +83,17 @@ public class ConsultationController {
         return ResponseEntity.ok(consultations);
     }
 
+    // buscando consultas por status
+    @GetMapping("/by-status")
+    public ResponseEntity<List<ConsultationResponseDTO>> getConsultationByStatus(
+            @RequestParam("status") ConsultationAndExmStatus status
+    ) {
+        log.info("[CONSULTATION] GET /consultation/by-status?status={} - Fetching consultations by status", status);
+        List<ConsultationResponseDTO> consultations = consultationService.getConsultationByStatus(status);
+        log.info("[CONSULTATION]  Found {} consultations for status={}", consultations.size(), status);
+        return ResponseEntity.ok(consultations);
+    }
+
     // atualizar informações de uma consulta
     @PutMapping("/{consultationId}/update")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_CUIDADOR') or hasAuthority('SCOPE_MEDICO')")

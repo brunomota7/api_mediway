@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
     List<Consultation> findByPatientInfosUserUserId(UUID patientId);
-    List<Consultation> findBySlotDate(LocalDate date);
+    List<Consultation> findByConsultationDate(LocalDate date);
     List<Consultation> findByDoctorInfosUserUserId(UUID doctorId);
     List<Consultation> findByStatus(ConsultationAndExmStatus status);
 }
