@@ -50,4 +50,3 @@ public class Medication {
     @JoinColumn(name = "medicine_box_id", nullable = false)
     private MedicineBox medicineBox;
 }
-
