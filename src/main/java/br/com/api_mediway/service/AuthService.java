@@ -21,11 +21,11 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,6 +40,7 @@ public class AuthService {
     private final JwtEncoder jwtEncoder;
     private final PasswordResetCodeRepository passwordResetCodeRepository;
     private final RabbitTemplate rabbitTemplate;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     public AuthService(UserRepository userRepository,
                        RoleRepository roleRepository,
@@ -122,7 +123,7 @@ public class AuthService {
 
         User user = userOpt.orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        String code = String.format("%06d", new Random().nextInt(999999));
+        String code = String.format("%06d", SECURE_RANDOM.nextInt(1_000_000));
         Instant expiration = Instant.now().plus(Duration.ofMinutes(3));
 
         PasswordResetCode resetCode = new PasswordResetCode();

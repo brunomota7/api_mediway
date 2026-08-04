@@ -35,3 +35,6 @@ build/
 ### Config Project ###
 /logs
 *.pem
+.env
+.env.*
+!.env.example

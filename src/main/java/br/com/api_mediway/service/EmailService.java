@@ -1,6 +1,8 @@
 package br.com.api_mediway.service;
 
+import br.com.api_mediway.exception.EmailSendException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromAddress;
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -39,13 +44,13 @@ public class EmailService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
-            message.setFrom("bruno7motadev@gmail.com");
+            message.setFrom(fromAddress);
 
             mailSender.send(message);
             log.info("[EMAIL] Password reset email successfully sent to={}", to);
         } catch (Exception ex) {
             log.error("[EMAIL] Failed to send email to={} - Error: {}", to, ex.getMessage(), ex);
-            throw new RuntimeException("Failed to send email");
+            throw new EmailSendException("Failed to send password reset email");
         }
     }
 }
