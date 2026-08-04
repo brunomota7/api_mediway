@@ -1,0 +1,2191 @@
+diff --git a/src/main/java/br/com/api_mediway/controller/AdminController.java b/src/main/java/br/com/api_mediway/admin/AdminController.java
+similarity index 93%
+rename from src/main/java/br/com/api_mediway/controller/AdminController.java
+rename to src/main/java/br/com/api_mediway/admin/AdminController.java
+index a0ffb11..7ba31ce 100644
+--- a/src/main/java/br/com/api_mediway/controller/AdminController.java
++++ b/src/main/java/br/com/api_mediway/admin/AdminController.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.admin;
+ 
+-import br.com.api_mediway.dto.request.admin.CreateAdminDto;
+-import br.com.api_mediway.dto.response.user.UserResponseDTO;
+-import br.com.api_mediway.service.AdminService;
++import br.com.api_mediway.admin.dto.request.CreateAdminDto;
++import br.com.api_mediway.user.dto.response.UserResponseDTO;
++import br.com.api_mediway.admin.AdminService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+diff --git a/src/main/java/br/com/api_mediway/service/AdminService.java b/src/main/java/br/com/api_mediway/admin/AdminService.java
+similarity index 88%
+rename from src/main/java/br/com/api_mediway/service/AdminService.java
+rename to src/main/java/br/com/api_mediway/admin/AdminService.java
+index 0ba7d89..80d6600 100644
+--- a/src/main/java/br/com/api_mediway/service/AdminService.java
++++ b/src/main/java/br/com/api_mediway/admin/AdminService.java
+@@ -1,16 +1,16 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.admin.CreateAdminDto;
+-import br.com.api_mediway.dto.response.user.UserResponseDTO;
+-import br.com.api_mediway.entites.Role;
+-import br.com.api_mediway.entites.User;
+-import br.com.api_mediway.exception.CannotDeleteAdminException;
+-import br.com.api_mediway.exception.CannotRemoveAdminRoleException;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.mapper.UserMapper;
+-import br.com.api_mediway.repository.RoleRepository;
+-import br.com.api_mediway.repository.UserRepository;
+-import br.com.api_mediway.utils.UtilsService;
++package br.com.api_mediway.admin;
++
++import br.com.api_mediway.admin.dto.request.CreateAdminDto;
++import br.com.api_mediway.user.dto.response.UserResponseDTO;
++import br.com.api_mediway.user.entity.Role;
++import br.com.api_mediway.user.entity.User;
++import br.com.api_mediway.common.exception.CannotDeleteAdminException;
++import br.com.api_mediway.common.exception.CannotRemoveAdminRoleException;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.user.mapper.UserMapper;
++import br.com.api_mediway.user.repository.RoleRepository;
++import br.com.api_mediway.user.repository.UserRepository;
++import br.com.api_mediway.common.util.UtilsService;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/admin/CreateAdminDto.java b/src/main/java/br/com/api_mediway/admin/dto/request/CreateAdminDto.java
+similarity index 79%
+rename from src/main/java/br/com/api_mediway/dto/request/admin/CreateAdminDto.java
+rename to src/main/java/br/com/api_mediway/admin/dto/request/CreateAdminDto.java
+index 218fce5..3ce9a6c 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/admin/CreateAdminDto.java
++++ b/src/main/java/br/com/api_mediway/admin/dto/request/CreateAdminDto.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.admin;
++package br.com.api_mediway.admin.dto.request;
+ 
+ public record CreateAdminDto(String name,
+                              String email,
+diff --git a/src/main/java/br/com/api_mediway/controller/AuthController.java b/src/main/java/br/com/api_mediway/auth/AuthController.java
+similarity index 91%
+rename from src/main/java/br/com/api_mediway/controller/AuthController.java
+rename to src/main/java/br/com/api_mediway/auth/AuthController.java
+index 15a0807..26fd5dc 100644
+--- a/src/main/java/br/com/api_mediway/controller/AuthController.java
++++ b/src/main/java/br/com/api_mediway/auth/AuthController.java
+@@ -1,10 +1,10 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.auth;
+ 
+-import br.com.api_mediway.dto.request.auth.*;
+-import br.com.api_mediway.dto.response.auth.LoginResponseDTO;
+-import br.com.api_mediway.dto.response.auth.TokenTempResetDTO;
+-import br.com.api_mediway.service.AuthService;
+-import br.com.api_mediway.service.PasswordResetCodeService;
++import br.com.api_mediway.auth.dto.request.*;
++import br.com.api_mediway.auth.dto.response.LoginResponseDTO;
++import br.com.api_mediway.auth.dto.response.TokenTempResetDTO;
++import br.com.api_mediway.auth.AuthService;
++import br.com.api_mediway.auth.PasswordResetCodeService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+diff --git a/src/main/java/br/com/api_mediway/service/AuthService.java b/src/main/java/br/com/api_mediway/auth/AuthService.java
+similarity index 89%
+rename from src/main/java/br/com/api_mediway/service/AuthService.java
+rename to src/main/java/br/com/api_mediway/auth/AuthService.java
+index 4e06278..5c367e7 100644
+--- a/src/main/java/br/com/api_mediway/service/AuthService.java
++++ b/src/main/java/br/com/api_mediway/auth/AuthService.java
+@@ -1,16 +1,16 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.auth.CreateUserDTO;
+-import br.com.api_mediway.dto.request.auth.LoginRequestDTO;
+-import br.com.api_mediway.dto.response.auth.LoginResponseDTO;
+-import br.com.api_mediway.dto.response.auth.ResetCodeMessage;
+-import br.com.api_mediway.entites.PasswordResetCode;
+-import br.com.api_mediway.entites.Role;
+-import br.com.api_mediway.entites.User;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.repository.PasswordResetCodeRepository;
+-import br.com.api_mediway.repository.RoleRepository;
+-import br.com.api_mediway.repository.UserRepository;
++package br.com.api_mediway.auth;
++
++import br.com.api_mediway.auth.dto.request.CreateUserDTO;
++import br.com.api_mediway.auth.dto.request.LoginRequestDTO;
++import br.com.api_mediway.auth.dto.response.LoginResponseDTO;
++import br.com.api_mediway.auth.dto.response.ResetCodeMessage;
++import br.com.api_mediway.auth.entity.PasswordResetCode;
++import br.com.api_mediway.user.entity.Role;
++import br.com.api_mediway.user.entity.User;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.auth.repository.PasswordResetCodeRepository;
++import br.com.api_mediway.user.repository.RoleRepository;
++import br.com.api_mediway.user.repository.UserRepository;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.amqp.rabbit.core.RabbitTemplate;
+diff --git a/src/main/java/br/com/api_mediway/service/EmailService.java b/src/main/java/br/com/api_mediway/auth/EmailService.java
+similarity index 95%
+rename from src/main/java/br/com/api_mediway/service/EmailService.java
+rename to src/main/java/br/com/api_mediway/auth/EmailService.java
+index ff55d3f..a9c9b38 100644
+--- a/src/main/java/br/com/api_mediway/service/EmailService.java
++++ b/src/main/java/br/com/api_mediway/auth/EmailService.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.service;
++package br.com.api_mediway.auth;
+ 
+-import br.com.api_mediway.exception.EmailSendException;
++import br.com.api_mediway.common.exception.EmailSendException;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.mail.SimpleMailMessage;
+diff --git a/src/main/java/br/com/api_mediway/service/JwtTokenService.java b/src/main/java/br/com/api_mediway/auth/JwtTokenService.java
+similarity index 96%
+rename from src/main/java/br/com/api_mediway/service/JwtTokenService.java
+rename to src/main/java/br/com/api_mediway/auth/JwtTokenService.java
+index 646d1df..f089904 100644
+--- a/src/main/java/br/com/api_mediway/service/JwtTokenService.java
++++ b/src/main/java/br/com/api_mediway/auth/JwtTokenService.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.service;
++package br.com.api_mediway.auth;
+ 
+-import br.com.api_mediway.entites.User;
++import br.com.api_mediway.user.entity.User;
+ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+ import org.springframework.security.oauth2.jwt.JwtEncoder;
+ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+diff --git a/src/main/java/br/com/api_mediway/service/PasswordResetCodeService.java b/src/main/java/br/com/api_mediway/auth/PasswordResetCodeService.java
+similarity index 89%
+rename from src/main/java/br/com/api_mediway/service/PasswordResetCodeService.java
+rename to src/main/java/br/com/api_mediway/auth/PasswordResetCodeService.java
+index f4ffb00..70c975a 100644
+--- a/src/main/java/br/com/api_mediway/service/PasswordResetCodeService.java
++++ b/src/main/java/br/com/api_mediway/auth/PasswordResetCodeService.java
+@@ -1,12 +1,12 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.response.auth.TokenTempResetDTO;
+-import br.com.api_mediway.entites.PasswordResetCode;
+-import br.com.api_mediway.entites.User;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.repository.PasswordResetCodeRepository;
+-import br.com.api_mediway.repository.UserRepository;
+-import br.com.api_mediway.utils.UtilsService;
++package br.com.api_mediway.auth;
++
++import br.com.api_mediway.auth.dto.response.TokenTempResetDTO;
++import br.com.api_mediway.auth.entity.PasswordResetCode;
++import br.com.api_mediway.user.entity.User;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.auth.repository.PasswordResetCodeRepository;
++import br.com.api_mediway.user.repository.UserRepository;
++import br.com.api_mediway.common.util.UtilsService;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/auth/CreateUserDTO.java b/src/main/java/br/com/api_mediway/auth/dto/request/CreateUserDTO.java
+similarity index 82%
+rename from src/main/java/br/com/api_mediway/dto/request/auth/CreateUserDTO.java
+rename to src/main/java/br/com/api_mediway/auth/dto/request/CreateUserDTO.java
+index 37bf43e..89a657f 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/auth/CreateUserDTO.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/request/CreateUserDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.auth;
++package br.com.api_mediway.auth.dto.request;
+ 
+ public record CreateUserDTO(String name,
+                             String email,
+diff --git a/src/main/java/br/com/api_mediway/dto/request/auth/LoginRequestDTO.java b/src/main/java/br/com/api_mediway/auth/dto/request/LoginRequestDTO.java
+similarity index 58%
+rename from src/main/java/br/com/api_mediway/dto/request/auth/LoginRequestDTO.java
+rename to src/main/java/br/com/api_mediway/auth/dto/request/LoginRequestDTO.java
+index 99573a1..1760516 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/auth/LoginRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/request/LoginRequestDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.auth;
++package br.com.api_mediway.auth.dto.request;
+ 
+ public record LoginRequestDTO(String email, String password) {
+ }
+\ No newline at end of file
+diff --git a/src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetCodeDTO.java b/src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetCodeDTO.java
+similarity index 54%
+rename from src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetCodeDTO.java
+rename to src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetCodeDTO.java
+index 8791c7c..7662189 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetCodeDTO.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetCodeDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.auth;
++package br.com.api_mediway.auth.dto.request;
+ 
+ public record PasswordResetCodeDTO(String code) {
+ }
+diff --git a/src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetConfirmDTO.java b/src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetConfirmDTO.java
+similarity index 58%
+rename from src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetConfirmDTO.java
+rename to src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetConfirmDTO.java
+index ccae77c..f752af8 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetConfirmDTO.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetConfirmDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.auth;
++package br.com.api_mediway.auth.dto.request;
+ 
+ public record PasswordResetConfirmDTO(String newPassword) {
+ }
+diff --git a/src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetRequestDTO.java b/src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetRequestDTO.java
+similarity index 57%
+rename from src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetRequestDTO.java
+rename to src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetRequestDTO.java
+index a3f6fd8..05c6a45 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/auth/PasswordResetRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/request/PasswordResetRequestDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.auth;
++package br.com.api_mediway.auth.dto.request;
+ 
+ public record PasswordResetRequestDTO(String identifier) {
+ }
+diff --git a/src/main/java/br/com/api_mediway/dto/response/auth/LoginResponseDTO.java b/src/main/java/br/com/api_mediway/auth/dto/response/LoginResponseDTO.java
+similarity index 71%
+rename from src/main/java/br/com/api_mediway/dto/response/auth/LoginResponseDTO.java
+rename to src/main/java/br/com/api_mediway/auth/dto/response/LoginResponseDTO.java
+index a178f48..4234aff 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/auth/LoginResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/response/LoginResponseDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.response.auth;
++package br.com.api_mediway.auth.dto.response;
+ 
+ import java.util.Set;
+ 
+diff --git a/src/main/java/br/com/api_mediway/dto/response/auth/ResetCodeMessage.java b/src/main/java/br/com/api_mediway/auth/dto/response/ResetCodeMessage.java
+similarity index 74%
+rename from src/main/java/br/com/api_mediway/dto/response/auth/ResetCodeMessage.java
+rename to src/main/java/br/com/api_mediway/auth/dto/response/ResetCodeMessage.java
+index f741d2e..54c0e71 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/auth/ResetCodeMessage.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/response/ResetCodeMessage.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.response.auth;
++package br.com.api_mediway.auth.dto.response;
+ 
+ import java.io.Serializable;
+ 
+diff --git a/src/main/java/br/com/api_mediway/dto/response/auth/TokenTempResetDTO.java b/src/main/java/br/com/api_mediway/auth/dto/response/TokenTempResetDTO.java
+similarity index 54%
+rename from src/main/java/br/com/api_mediway/dto/response/auth/TokenTempResetDTO.java
+rename to src/main/java/br/com/api_mediway/auth/dto/response/TokenTempResetDTO.java
+index 55a05b1..25f804d 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/auth/TokenTempResetDTO.java
++++ b/src/main/java/br/com/api_mediway/auth/dto/response/TokenTempResetDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.response.auth;
++package br.com.api_mediway.auth.dto.response;
+ 
+ public record TokenTempResetDTO(String tokenTemp) {
+ }
+diff --git a/src/main/java/br/com/api_mediway/entites/PasswordResetCode.java b/src/main/java/br/com/api_mediway/auth/entity/PasswordResetCode.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/entites/PasswordResetCode.java
+rename to src/main/java/br/com/api_mediway/auth/entity/PasswordResetCode.java
+index 366df5a..43a3d07 100644
+--- a/src/main/java/br/com/api_mediway/entites/PasswordResetCode.java
++++ b/src/main/java/br/com/api_mediway/auth/entity/PasswordResetCode.java
+@@ -1,4 +1,6 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.auth.entity;
++
++import br.com.api_mediway.user.entity.User;
+ 
+ import jakarta.persistence.*;
+ import lombok.Data;
+diff --git a/src/main/java/br/com/api_mediway/repository/PasswordResetCodeRepository.java b/src/main/java/br/com/api_mediway/auth/repository/PasswordResetCodeRepository.java
+similarity index 86%
+rename from src/main/java/br/com/api_mediway/repository/PasswordResetCodeRepository.java
+rename to src/main/java/br/com/api_mediway/auth/repository/PasswordResetCodeRepository.java
+index b6cc27b..1307dfd 100644
+--- a/src/main/java/br/com/api_mediway/repository/PasswordResetCodeRepository.java
++++ b/src/main/java/br/com/api_mediway/auth/repository/PasswordResetCodeRepository.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.auth.repository;
+ 
+-import br.com.api_mediway.entites.PasswordResetCode;
++import br.com.api_mediway.auth.entity.PasswordResetCode;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/controller/CaregiverController.java b/src/main/java/br/com/api_mediway/caregiver/CaregiverController.java
+similarity index 92%
+rename from src/main/java/br/com/api_mediway/controller/CaregiverController.java
+rename to src/main/java/br/com/api_mediway/caregiver/CaregiverController.java
+index 94e2e91..b83aae3 100644
+--- a/src/main/java/br/com/api_mediway/controller/CaregiverController.java
++++ b/src/main/java/br/com/api_mediway/caregiver/CaregiverController.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.caregiver;
+ 
+-import br.com.api_mediway.dto.request.caregiver.CaregiverRequestDTO;
+-import br.com.api_mediway.dto.response.caregiver.CaregiverResponseDTO;
+-import br.com.api_mediway.service.CaregiverService;
++import br.com.api_mediway.caregiver.dto.request.CaregiverRequestDTO;
++import br.com.api_mediway.caregiver.dto.response.CaregiverResponseDTO;
++import br.com.api_mediway.caregiver.CaregiverService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+diff --git a/src/main/java/br/com/api_mediway/service/CaregiverService.java b/src/main/java/br/com/api_mediway/caregiver/CaregiverService.java
+similarity index 84%
+rename from src/main/java/br/com/api_mediway/service/CaregiverService.java
+rename to src/main/java/br/com/api_mediway/caregiver/CaregiverService.java
+index d2c2c32..f31cb96 100644
+--- a/src/main/java/br/com/api_mediway/service/CaregiverService.java
++++ b/src/main/java/br/com/api_mediway/caregiver/CaregiverService.java
+@@ -1,16 +1,16 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.caregiver.CaregiverRequestDTO;
+-import br.com.api_mediway.dto.response.caregiver.CaregiverResponseDTO;
+-import br.com.api_mediway.entites.CaregiverInfos;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.entites.User;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.factory.CaregiverFactory;
+-import br.com.api_mediway.mapper.CaregiverMapper;
+-import br.com.api_mediway.repository.CaregiverInfosRepository;
+-import br.com.api_mediway.repository.PatientInfosRepository;
+-import br.com.api_mediway.repository.UserRepository;
++package br.com.api_mediway.caregiver;
++
++import br.com.api_mediway.caregiver.dto.request.CaregiverRequestDTO;
++import br.com.api_mediway.caregiver.dto.response.CaregiverResponseDTO;
++import br.com.api_mediway.caregiver.entity.CaregiverInfos;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.user.entity.User;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.caregiver.factory.CaregiverFactory;
++import br.com.api_mediway.caregiver.mapper.CaregiverMapper;
++import br.com.api_mediway.caregiver.repository.CaregiverInfosRepository;
++import br.com.api_mediway.patient.repository.PatientInfosRepository;
++import br.com.api_mediway.user.repository.UserRepository;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/caregiver/CaregiverRequestDTO.java b/src/main/java/br/com/api_mediway/caregiver/dto/request/CaregiverRequestDTO.java
+similarity index 55%
+rename from src/main/java/br/com/api_mediway/dto/request/caregiver/CaregiverRequestDTO.java
+rename to src/main/java/br/com/api_mediway/caregiver/dto/request/CaregiverRequestDTO.java
+index 5fa7f73..acd0d70 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/caregiver/CaregiverRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/caregiver/dto/request/CaregiverRequestDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.request.caregiver;
++package br.com.api_mediway.caregiver.dto.request;
+ 
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ 
+ public record CaregiverRequestDTO(
+         String specialty,
+diff --git a/src/main/java/br/com/api_mediway/dto/response/caregiver/CaregiverResponseDTO.java b/src/main/java/br/com/api_mediway/caregiver/dto/response/CaregiverResponseDTO.java
+similarity index 72%
+rename from src/main/java/br/com/api_mediway/dto/response/caregiver/CaregiverResponseDTO.java
+rename to src/main/java/br/com/api_mediway/caregiver/dto/response/CaregiverResponseDTO.java
+index f2405de..efbf0f2 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/caregiver/CaregiverResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/caregiver/dto/response/CaregiverResponseDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.response.caregiver;
++package br.com.api_mediway.caregiver.dto.response;
+ 
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ 
+ import java.util.List;
+ import java.util.UUID;
+diff --git a/src/main/java/br/com/api_mediway/entites/CaregiverInfos.java b/src/main/java/br/com/api_mediway/caregiver/entity/CaregiverInfos.java
+similarity index 78%
+rename from src/main/java/br/com/api_mediway/entites/CaregiverInfos.java
+rename to src/main/java/br/com/api_mediway/caregiver/entity/CaregiverInfos.java
+index 36f61bf..d340e21 100644
+--- a/src/main/java/br/com/api_mediway/entites/CaregiverInfos.java
++++ b/src/main/java/br/com/api_mediway/caregiver/entity/CaregiverInfos.java
+@@ -1,6 +1,9 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.caregiver.entity;
+ 
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.user.entity.User;
++
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ 
+diff --git a/src/main/java/br/com/api_mediway/factory/CaregiverFactory.java b/src/main/java/br/com/api_mediway/caregiver/factory/CaregiverFactory.java
+similarity index 68%
+rename from src/main/java/br/com/api_mediway/factory/CaregiverFactory.java
+rename to src/main/java/br/com/api_mediway/caregiver/factory/CaregiverFactory.java
+index e9f056e..ba0c71e 100644
+--- a/src/main/java/br/com/api_mediway/factory/CaregiverFactory.java
++++ b/src/main/java/br/com/api_mediway/caregiver/factory/CaregiverFactory.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.caregiver.factory;
+ 
+-import br.com.api_mediway.dto.request.caregiver.CaregiverRequestDTO;
+-import br.com.api_mediway.entites.CaregiverInfos;
+-import br.com.api_mediway.entites.User;
++import br.com.api_mediway.caregiver.dto.request.CaregiverRequestDTO;
++import br.com.api_mediway.caregiver.entity.CaregiverInfos;
++import br.com.api_mediway.user.entity.User;
+ import org.springframework.stereotype.Component;
+ 
+ @Component
+diff --git a/src/main/java/br/com/api_mediway/mapper/CaregiverMapper.java b/src/main/java/br/com/api_mediway/caregiver/mapper/CaregiverMapper.java
+similarity index 82%
+rename from src/main/java/br/com/api_mediway/mapper/CaregiverMapper.java
+rename to src/main/java/br/com/api_mediway/caregiver/mapper/CaregiverMapper.java
+index bdec233..8b50dd4 100644
+--- a/src/main/java/br/com/api_mediway/mapper/CaregiverMapper.java
++++ b/src/main/java/br/com/api_mediway/caregiver/mapper/CaregiverMapper.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.caregiver.mapper;
+ 
+-import br.com.api_mediway.dto.response.caregiver.CaregiverResponseDTO;
+-import br.com.api_mediway.entites.CaregiverInfos;
++import br.com.api_mediway.caregiver.dto.response.CaregiverResponseDTO;
++import br.com.api_mediway.caregiver.entity.CaregiverInfos;
+ 
+ import java.util.List;
+ import java.util.UUID;
+diff --git a/src/main/java/br/com/api_mediway/repository/CaregiverInfosRepository.java b/src/main/java/br/com/api_mediway/caregiver/repository/CaregiverInfosRepository.java
+similarity index 77%
+rename from src/main/java/br/com/api_mediway/repository/CaregiverInfosRepository.java
+rename to src/main/java/br/com/api_mediway/caregiver/repository/CaregiverInfosRepository.java
+index 55497a2..a824cf4 100644
+--- a/src/main/java/br/com/api_mediway/repository/CaregiverInfosRepository.java
++++ b/src/main/java/br/com/api_mediway/caregiver/repository/CaregiverInfosRepository.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.caregiver.repository;
+ 
+-import br.com.api_mediway.entites.CaregiverInfos;
++import br.com.api_mediway.caregiver.entity.CaregiverInfos;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/config/RabbitMQConfig.java b/src/main/java/br/com/api_mediway/common/config/RabbitMQConfig.java
+similarity index 97%
+rename from src/main/java/br/com/api_mediway/config/RabbitMQConfig.java
+rename to src/main/java/br/com/api_mediway/common/config/RabbitMQConfig.java
+index 7d2b561..23d0fce 100644
+--- a/src/main/java/br/com/api_mediway/config/RabbitMQConfig.java
++++ b/src/main/java/br/com/api_mediway/common/config/RabbitMQConfig.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.config;
++package br.com.api_mediway.common.config;
+ 
+ import org.springframework.amqp.core.Binding;
+ import org.springframework.amqp.core.BindingBuilder;
+diff --git a/src/main/java/br/com/api_mediway/config/SecurityConfig.java b/src/main/java/br/com/api_mediway/common/config/SecurityConfig.java
+similarity index 98%
+rename from src/main/java/br/com/api_mediway/config/SecurityConfig.java
+rename to src/main/java/br/com/api_mediway/common/config/SecurityConfig.java
+index 21b301f..e2de1ca 100644
+--- a/src/main/java/br/com/api_mediway/config/SecurityConfig.java
++++ b/src/main/java/br/com/api_mediway/common/config/SecurityConfig.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.config;
++package br.com.api_mediway.common.config;
+ 
+ 
+ import com.nimbusds.jose.jwk.JWK;
+diff --git a/src/main/java/br/com/api_mediway/enums/ConsultationAndExmStatus.java b/src/main/java/br/com/api_mediway/common/enums/ConsultationAndExmStatus.java
+similarity index 90%
+rename from src/main/java/br/com/api_mediway/enums/ConsultationAndExmStatus.java
+rename to src/main/java/br/com/api_mediway/common/enums/ConsultationAndExmStatus.java
+index 5a5aabb..37b82f2 100644
+--- a/src/main/java/br/com/api_mediway/enums/ConsultationAndExmStatus.java
++++ b/src/main/java/br/com/api_mediway/common/enums/ConsultationAndExmStatus.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.common.enums;
+ 
+ public enum ConsultationAndExmStatus {
+     MARCADO("Marcado"),
+diff --git a/src/main/java/br/com/api_mediway/enums/DoctorAndCaregiverAvailability.java b/src/main/java/br/com/api_mediway/common/enums/DoctorAndCaregiverAvailability.java
+similarity index 89%
+rename from src/main/java/br/com/api_mediway/enums/DoctorAndCaregiverAvailability.java
+rename to src/main/java/br/com/api_mediway/common/enums/DoctorAndCaregiverAvailability.java
+index 019756c..48434d1 100644
+--- a/src/main/java/br/com/api_mediway/enums/DoctorAndCaregiverAvailability.java
++++ b/src/main/java/br/com/api_mediway/common/enums/DoctorAndCaregiverAvailability.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.common.enums;
+ 
+ public enum DoctorAndCaregiverAvailability {
+     INTEGRAL("Integral"),
+diff --git a/src/main/java/br/com/api_mediway/exception/CannotDeleteAdminException.java b/src/main/java/br/com/api_mediway/common/exception/CannotDeleteAdminException.java
+similarity index 77%
+rename from src/main/java/br/com/api_mediway/exception/CannotDeleteAdminException.java
+rename to src/main/java/br/com/api_mediway/common/exception/CannotDeleteAdminException.java
+index 0d6f894..8698419 100644
+--- a/src/main/java/br/com/api_mediway/exception/CannotDeleteAdminException.java
++++ b/src/main/java/br/com/api_mediway/common/exception/CannotDeleteAdminException.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.exception;
++package br.com.api_mediway.common.exception;
+ 
+ public class CannotDeleteAdminException extends RuntimeException {
+     public CannotDeleteAdminException(String message) {
+diff --git a/src/main/java/br/com/api_mediway/exception/CannotRemoveAdminRoleException.java b/src/main/java/br/com/api_mediway/common/exception/CannotRemoveAdminRoleException.java
+similarity index 78%
+rename from src/main/java/br/com/api_mediway/exception/CannotRemoveAdminRoleException.java
+rename to src/main/java/br/com/api_mediway/common/exception/CannotRemoveAdminRoleException.java
+index 61ccf28..f68f96b 100644
+--- a/src/main/java/br/com/api_mediway/exception/CannotRemoveAdminRoleException.java
++++ b/src/main/java/br/com/api_mediway/common/exception/CannotRemoveAdminRoleException.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.exception;
++package br.com.api_mediway.common.exception;
+ 
+ public class CannotRemoveAdminRoleException extends RuntimeException {
+     public CannotRemoveAdminRoleException(String message) {
+diff --git a/src/main/java/br/com/api_mediway/exception/EmailSendException.java b/src/main/java/br/com/api_mediway/common/exception/EmailSendException.java
+similarity index 75%
+rename from src/main/java/br/com/api_mediway/exception/EmailSendException.java
+rename to src/main/java/br/com/api_mediway/common/exception/EmailSendException.java
+index a2ad5fd..47d49e3 100644
+--- a/src/main/java/br/com/api_mediway/exception/EmailSendException.java
++++ b/src/main/java/br/com/api_mediway/common/exception/EmailSendException.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.exception;
++package br.com.api_mediway.common.exception;
+ 
+ public class EmailSendException extends RuntimeException {
+     public EmailSendException(String message) {
+diff --git a/src/main/java/br/com/api_mediway/dto/response/error/ErrorResponseDTO.java b/src/main/java/br/com/api_mediway/common/exception/ErrorResponseDTO.java
+similarity index 87%
+rename from src/main/java/br/com/api_mediway/dto/response/error/ErrorResponseDTO.java
+rename to src/main/java/br/com/api_mediway/common/exception/ErrorResponseDTO.java
+index 601c788..dcbfd62 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/error/ErrorResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/common/exception/ErrorResponseDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.response.error;
++package br.com.api_mediway.common.exception;
+ 
+ import java.time.Instant;
+ 
+diff --git a/src/main/java/br/com/api_mediway/controller/GlobalExceptionHandle.java b/src/main/java/br/com/api_mediway/common/exception/GlobalExceptionHandle.java
+similarity index 93%
+rename from src/main/java/br/com/api_mediway/controller/GlobalExceptionHandle.java
+rename to src/main/java/br/com/api_mediway/common/exception/GlobalExceptionHandle.java
+index 0ea1951..6f1936d 100644
+--- a/src/main/java/br/com/api_mediway/controller/GlobalExceptionHandle.java
++++ b/src/main/java/br/com/api_mediway/common/exception/GlobalExceptionHandle.java
+@@ -1,11 +1,11 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.common.exception;
+ 
+-import br.com.api_mediway.dto.response.error.ErrorResponseDTO;
+-import br.com.api_mediway.exception.CannotDeleteAdminException;
+-import br.com.api_mediway.exception.CannotRemoveAdminRoleException;
+-import br.com.api_mediway.exception.EmailSendException;
+-import br.com.api_mediway.exception.SlotAlreadyExistsException;
+-import br.com.api_mediway.exception.UserNotFoundException;
++import br.com.api_mediway.common.exception.ErrorResponseDTO;
++import br.com.api_mediway.common.exception.CannotDeleteAdminException;
++import br.com.api_mediway.common.exception.CannotRemoveAdminRoleException;
++import br.com.api_mediway.common.exception.EmailSendException;
++import br.com.api_mediway.common.exception.SlotAlreadyExistsException;
++import br.com.api_mediway.common.exception.UserNotFoundException;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+diff --git a/src/main/java/br/com/api_mediway/exception/SlotAlreadyExistsException.java b/src/main/java/br/com/api_mediway/common/exception/SlotAlreadyExistsException.java
+similarity index 77%
+rename from src/main/java/br/com/api_mediway/exception/SlotAlreadyExistsException.java
+rename to src/main/java/br/com/api_mediway/common/exception/SlotAlreadyExistsException.java
+index e8aef6e..64db5b9 100644
+--- a/src/main/java/br/com/api_mediway/exception/SlotAlreadyExistsException.java
++++ b/src/main/java/br/com/api_mediway/common/exception/SlotAlreadyExistsException.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.exception;
++package br.com.api_mediway.common.exception;
+ 
+ public class SlotAlreadyExistsException extends RuntimeException {
+     public SlotAlreadyExistsException(String message) {
+diff --git a/src/main/java/br/com/api_mediway/exception/UserNotFoundException.java b/src/main/java/br/com/api_mediway/common/exception/UserNotFoundException.java
+similarity index 76%
+rename from src/main/java/br/com/api_mediway/exception/UserNotFoundException.java
+rename to src/main/java/br/com/api_mediway/common/exception/UserNotFoundException.java
+index 9398b18..7308d3b 100644
+--- a/src/main/java/br/com/api_mediway/exception/UserNotFoundException.java
++++ b/src/main/java/br/com/api_mediway/common/exception/UserNotFoundException.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.exception;
++package br.com.api_mediway.common.exception;
+ 
+ public class UserNotFoundException extends RuntimeException {
+     public UserNotFoundException(String message) {
+diff --git a/src/main/java/br/com/api_mediway/utils/ExpiredCodeCleaner.java b/src/main/java/br/com/api_mediway/common/util/ExpiredCodeCleaner.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/utils/ExpiredCodeCleaner.java
+rename to src/main/java/br/com/api_mediway/common/util/ExpiredCodeCleaner.java
+index 39d1ad2..fa0868b 100644
+--- a/src/main/java/br/com/api_mediway/utils/ExpiredCodeCleaner.java
++++ b/src/main/java/br/com/api_mediway/common/util/ExpiredCodeCleaner.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.utils;
++package br.com.api_mediway.common.util;
+ 
+-import br.com.api_mediway.entites.PasswordResetCode;
+-import br.com.api_mediway.repository.PasswordResetCodeRepository;
++import br.com.api_mediway.auth.entity.PasswordResetCode;
++import br.com.api_mediway.auth.repository.PasswordResetCodeRepository;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.scheduling.annotation.Scheduled;
+ import org.springframework.stereotype.Component;
+diff --git a/src/main/java/br/com/api_mediway/utils/UtilsService.java b/src/main/java/br/com/api_mediway/common/util/UtilsService.java
+similarity index 97%
+rename from src/main/java/br/com/api_mediway/utils/UtilsService.java
+rename to src/main/java/br/com/api_mediway/common/util/UtilsService.java
+index 54ed246..5b7343b 100644
+--- a/src/main/java/br/com/api_mediway/utils/UtilsService.java
++++ b/src/main/java/br/com/api_mediway/common/util/UtilsService.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.utils;
++package br.com.api_mediway.common.util;
+ 
+ import org.springframework.security.authentication.BadCredentialsException;
+ import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+diff --git a/src/main/java/br/com/api_mediway/controller/ConsultationController.java b/src/main/java/br/com/api_mediway/consultation/ConsultationController.java
+similarity index 94%
+rename from src/main/java/br/com/api_mediway/controller/ConsultationController.java
+rename to src/main/java/br/com/api_mediway/consultation/ConsultationController.java
+index a834be1..c2f3c60 100644
+--- a/src/main/java/br/com/api_mediway/controller/ConsultationController.java
++++ b/src/main/java/br/com/api_mediway/consultation/ConsultationController.java
+@@ -1,10 +1,10 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.consultation;
+ 
+-import br.com.api_mediway.dto.request.consultation.ConsultationRequestDTO;
+-import br.com.api_mediway.dto.request.consultation.UpdateConsultationDTO;
+-import br.com.api_mediway.dto.response.consultation.ConsultationResponseDTO;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
+-import br.com.api_mediway.service.ConsultationService;
++import br.com.api_mediway.consultation.dto.request.ConsultationRequestDTO;
++import br.com.api_mediway.consultation.dto.request.UpdateConsultationDTO;
++import br.com.api_mediway.consultation.dto.response.ConsultationResponseDTO;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.consultation.ConsultationService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.format.annotation.DateTimeFormat;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/service/ConsultationService.java b/src/main/java/br/com/api_mediway/consultation/ConsultationService.java
+similarity index 89%
+rename from src/main/java/br/com/api_mediway/service/ConsultationService.java
+rename to src/main/java/br/com/api_mediway/consultation/ConsultationService.java
+index 5cb166a..7e4c20e 100644
+--- a/src/main/java/br/com/api_mediway/service/ConsultationService.java
++++ b/src/main/java/br/com/api_mediway/consultation/ConsultationService.java
+@@ -1,19 +1,19 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.consultation.ConsultationRequestDTO;
+-import br.com.api_mediway.dto.request.consultation.UpdateConsultationDTO;
+-import br.com.api_mediway.dto.response.consultation.ConsultationResponseDTO;
+-import br.com.api_mediway.entites.Consultation;
+-import br.com.api_mediway.entites.DoctorInfos;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.factory.ConsultationFactory;
+-import br.com.api_mediway.mapper.ConsultationMapper;
+-import br.com.api_mediway.repository.ConsultationRepository;
+-import br.com.api_mediway.repository.DoctorInfosRepository;
+-import br.com.api_mediway.repository.PatientInfosRepository;
+-import br.com.api_mediway.utils.UtilsService;
++package br.com.api_mediway.consultation;
++
++import br.com.api_mediway.consultation.dto.request.ConsultationRequestDTO;
++import br.com.api_mediway.consultation.dto.request.UpdateConsultationDTO;
++import br.com.api_mediway.consultation.dto.response.ConsultationResponseDTO;
++import br.com.api_mediway.consultation.entity.Consultation;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.consultation.factory.ConsultationFactory;
++import br.com.api_mediway.consultation.mapper.ConsultationMapper;
++import br.com.api_mediway.consultation.repository.ConsultationRepository;
++import br.com.api_mediway.doctor.repository.DoctorInfosRepository;
++import br.com.api_mediway.patient.repository.PatientInfosRepository;
++import br.com.api_mediway.common.util.UtilsService;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/consultation/ConsultationRequestDTO.java b/src/main/java/br/com/api_mediway/consultation/dto/request/ConsultationRequestDTO.java
+similarity index 85%
+rename from src/main/java/br/com/api_mediway/dto/request/consultation/ConsultationRequestDTO.java
+rename to src/main/java/br/com/api_mediway/consultation/dto/request/ConsultationRequestDTO.java
+index 60fbea8..c47c332 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/consultation/ConsultationRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/consultation/dto/request/ConsultationRequestDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.consultation;
++package br.com.api_mediway.consultation.dto.request;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalTime;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/consultation/UpdateConsultationDTO.java b/src/main/java/br/com/api_mediway/consultation/dto/request/UpdateConsultationDTO.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/dto/request/consultation/UpdateConsultationDTO.java
+rename to src/main/java/br/com/api_mediway/consultation/dto/request/UpdateConsultationDTO.java
+index e443d63..748185a 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/consultation/UpdateConsultationDTO.java
++++ b/src/main/java/br/com/api_mediway/consultation/dto/request/UpdateConsultationDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.consultation;
++package br.com.api_mediway.consultation.dto.request;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalTime;
+diff --git a/src/main/java/br/com/api_mediway/dto/response/consultation/ConsultationResponseDTO.java b/src/main/java/br/com/api_mediway/consultation/dto/response/ConsultationResponseDTO.java
+similarity index 85%
+rename from src/main/java/br/com/api_mediway/dto/response/consultation/ConsultationResponseDTO.java
+rename to src/main/java/br/com/api_mediway/consultation/dto/response/ConsultationResponseDTO.java
+index ce60717..fb548ba 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/consultation/ConsultationResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/consultation/dto/response/ConsultationResponseDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.response.consultation;
++package br.com.api_mediway.consultation.dto.response;
+ 
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalTime;
+diff --git a/src/main/java/br/com/api_mediway/dto/response/consultation/ConsultationSummaryDTO.java b/src/main/java/br/com/api_mediway/consultation/dto/response/ConsultationSummaryDTO.java
+similarity index 82%
+rename from src/main/java/br/com/api_mediway/dto/response/consultation/ConsultationSummaryDTO.java
+rename to src/main/java/br/com/api_mediway/consultation/dto/response/ConsultationSummaryDTO.java
+index 396d6d9..103d409 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/consultation/ConsultationSummaryDTO.java
++++ b/src/main/java/br/com/api_mediway/consultation/dto/response/ConsultationSummaryDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.response.consultation;
++package br.com.api_mediway.consultation.dto.response;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalTime;
+diff --git a/src/main/java/br/com/api_mediway/entites/Consultation.java b/src/main/java/br/com/api_mediway/consultation/entity/Consultation.java
+similarity index 82%
+rename from src/main/java/br/com/api_mediway/entites/Consultation.java
+rename to src/main/java/br/com/api_mediway/consultation/entity/Consultation.java
+index d6e1dec..c27216c 100644
+--- a/src/main/java/br/com/api_mediway/entites/Consultation.java
++++ b/src/main/java/br/com/api_mediway/consultation/entity/Consultation.java
+@@ -1,6 +1,9 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.consultation.entity;
+ 
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.patient.entity.PatientInfos;
++
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ 
+diff --git a/src/main/java/br/com/api_mediway/factory/ConsultationFactory.java b/src/main/java/br/com/api_mediway/consultation/factory/ConsultationFactory.java
+similarity index 63%
+rename from src/main/java/br/com/api_mediway/factory/ConsultationFactory.java
+rename to src/main/java/br/com/api_mediway/consultation/factory/ConsultationFactory.java
+index 26c69ec..b49999c 100644
+--- a/src/main/java/br/com/api_mediway/factory/ConsultationFactory.java
++++ b/src/main/java/br/com/api_mediway/consultation/factory/ConsultationFactory.java
+@@ -1,10 +1,10 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.consultation.factory;
+ 
+-import br.com.api_mediway.dto.request.consultation.ConsultationRequestDTO;
+-import br.com.api_mediway.entites.Consultation;
+-import br.com.api_mediway.entites.DoctorInfos;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.consultation.dto.request.ConsultationRequestDTO;
++import br.com.api_mediway.consultation.entity.Consultation;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ 
+ public class ConsultationFactory {
+ 
+diff --git a/src/main/java/br/com/api_mediway/mapper/ConsultationMapper.java b/src/main/java/br/com/api_mediway/consultation/mapper/ConsultationMapper.java
+similarity index 87%
+rename from src/main/java/br/com/api_mediway/mapper/ConsultationMapper.java
+rename to src/main/java/br/com/api_mediway/consultation/mapper/ConsultationMapper.java
+index 3903f37..e58f64d 100644
+--- a/src/main/java/br/com/api_mediway/mapper/ConsultationMapper.java
++++ b/src/main/java/br/com/api_mediway/consultation/mapper/ConsultationMapper.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.consultation.mapper;
+ 
+ 
+-import br.com.api_mediway.dto.response.consultation.ConsultationResponseDTO;
+-import br.com.api_mediway.entites.Consultation;
++import br.com.api_mediway.consultation.dto.response.ConsultationResponseDTO;
++import br.com.api_mediway.consultation.entity.Consultation;
+ 
+ public class ConsultationMapper {
+ 
+diff --git a/src/main/java/br/com/api_mediway/repository/ConsultationRepository.java b/src/main/java/br/com/api_mediway/consultation/repository/ConsultationRepository.java
+similarity index 75%
+rename from src/main/java/br/com/api_mediway/repository/ConsultationRepository.java
+rename to src/main/java/br/com/api_mediway/consultation/repository/ConsultationRepository.java
+index 6d6e91d..62b5f3a 100644
+--- a/src/main/java/br/com/api_mediway/repository/ConsultationRepository.java
++++ b/src/main/java/br/com/api_mediway/consultation/repository/ConsultationRepository.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.consultation.repository;
+ 
+-import br.com.api_mediway.entites.Consultation;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.consultation.entity.Consultation;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/controller/DoctorController.java b/src/main/java/br/com/api_mediway/doctor/DoctorController.java
+similarity index 93%
+rename from src/main/java/br/com/api_mediway/controller/DoctorController.java
+rename to src/main/java/br/com/api_mediway/doctor/DoctorController.java
+index 305f7d0..f0f2e26 100644
+--- a/src/main/java/br/com/api_mediway/controller/DoctorController.java
++++ b/src/main/java/br/com/api_mediway/doctor/DoctorController.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.doctor;
+ 
+-import br.com.api_mediway.dto.request.doctor.AddInfosDoctorDTO;
+-import br.com.api_mediway.dto.request.doctor.UpdateDoctorInfosDTO;
+-import br.com.api_mediway.dto.response.doctor.DoctorResponseDTO;
+-import br.com.api_mediway.service.DoctorService;
++import br.com.api_mediway.doctor.dto.request.AddInfosDoctorDTO;
++import br.com.api_mediway.doctor.dto.request.UpdateDoctorInfosDTO;
++import br.com.api_mediway.doctor.dto.response.DoctorResponseDTO;
++import br.com.api_mediway.doctor.DoctorService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+diff --git a/src/main/java/br/com/api_mediway/service/DoctorService.java b/src/main/java/br/com/api_mediway/doctor/DoctorService.java
+similarity index 87%
+rename from src/main/java/br/com/api_mediway/service/DoctorService.java
+rename to src/main/java/br/com/api_mediway/doctor/DoctorService.java
+index afce188..ad4b6be 100644
+--- a/src/main/java/br/com/api_mediway/service/DoctorService.java
++++ b/src/main/java/br/com/api_mediway/doctor/DoctorService.java
+@@ -1,17 +1,17 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.doctor.AddInfosDoctorDTO;
+-import br.com.api_mediway.dto.request.doctor.UpdateDoctorInfosDTO;
+-import br.com.api_mediway.dto.response.doctor.DoctorResponseDTO;
+-import br.com.api_mediway.entites.DoctorInfos;
+-import br.com.api_mediway.entites.User;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.factory.DoctorFactory;
+-import br.com.api_mediway.factory.UserFactory;
+-import br.com.api_mediway.mapper.DoctorMapper;
+-import br.com.api_mediway.repository.DoctorInfosRepository;
+-import br.com.api_mediway.repository.UserRepository;
+-import br.com.api_mediway.utils.UtilsService;
++package br.com.api_mediway.doctor;
++
++import br.com.api_mediway.doctor.dto.request.AddInfosDoctorDTO;
++import br.com.api_mediway.doctor.dto.request.UpdateDoctorInfosDTO;
++import br.com.api_mediway.doctor.dto.response.DoctorResponseDTO;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.user.entity.User;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.doctor.factory.DoctorFactory;
++import br.com.api_mediway.user.factory.UserFactory;
++import br.com.api_mediway.doctor.mapper.DoctorMapper;
++import br.com.api_mediway.doctor.repository.DoctorInfosRepository;
++import br.com.api_mediway.user.repository.UserRepository;
++import br.com.api_mediway.common.util.UtilsService;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/doctor/AddInfosDoctorDTO.java b/src/main/java/br/com/api_mediway/doctor/dto/request/AddInfosDoctorDTO.java
+similarity index 54%
+rename from src/main/java/br/com/api_mediway/dto/request/doctor/AddInfosDoctorDTO.java
+rename to src/main/java/br/com/api_mediway/doctor/dto/request/AddInfosDoctorDTO.java
+index 6aa3544..c2b7cae 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/doctor/AddInfosDoctorDTO.java
++++ b/src/main/java/br/com/api_mediway/doctor/dto/request/AddInfosDoctorDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.request.doctor;
++package br.com.api_mediway.doctor.dto.request;
+ 
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ 
+ public record AddInfosDoctorDTO(
+         String crm,
+diff --git a/src/main/java/br/com/api_mediway/dto/request/doctor/UpdateDoctorInfosDTO.java b/src/main/java/br/com/api_mediway/doctor/dto/request/UpdateDoctorInfosDTO.java
+similarity index 64%
+rename from src/main/java/br/com/api_mediway/dto/request/doctor/UpdateDoctorInfosDTO.java
+rename to src/main/java/br/com/api_mediway/doctor/dto/request/UpdateDoctorInfosDTO.java
+index d5b1a30..cdc5380 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/doctor/UpdateDoctorInfosDTO.java
++++ b/src/main/java/br/com/api_mediway/doctor/dto/request/UpdateDoctorInfosDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.request.doctor;
++package br.com.api_mediway.doctor.dto.request;
+ 
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ 
+ public record UpdateDoctorInfosDTO(
+         String name,
+diff --git a/src/main/java/br/com/api_mediway/dto/response/doctor/DoctorResponseDTO.java b/src/main/java/br/com/api_mediway/doctor/dto/response/DoctorResponseDTO.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/dto/response/doctor/DoctorResponseDTO.java
+rename to src/main/java/br/com/api_mediway/doctor/dto/response/DoctorResponseDTO.java
+index 30d6325..d0f212b 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/doctor/DoctorResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/doctor/dto/response/DoctorResponseDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.response.doctor;
++package br.com.api_mediway.doctor.dto.response;
+ 
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ 
+ import java.util.List;
+ import java.util.UUID;
+diff --git a/src/main/java/br/com/api_mediway/entites/DoctorInfos.java b/src/main/java/br/com/api_mediway/doctor/entity/DoctorInfos.java
+similarity index 78%
+rename from src/main/java/br/com/api_mediway/entites/DoctorInfos.java
+rename to src/main/java/br/com/api_mediway/doctor/entity/DoctorInfos.java
+index 80463d8..f80fc4a 100644
+--- a/src/main/java/br/com/api_mediway/entites/DoctorInfos.java
++++ b/src/main/java/br/com/api_mediway/doctor/entity/DoctorInfos.java
+@@ -1,6 +1,10 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.doctor.entity;
+ 
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.consultation.entity.Consultation;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.user.entity.User;
++
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ 
+diff --git a/src/main/java/br/com/api_mediway/factory/DoctorFactory.java b/src/main/java/br/com/api_mediway/doctor/factory/DoctorFactory.java
+similarity index 72%
+rename from src/main/java/br/com/api_mediway/factory/DoctorFactory.java
+rename to src/main/java/br/com/api_mediway/doctor/factory/DoctorFactory.java
+index 587ba32..cf752f5 100644
+--- a/src/main/java/br/com/api_mediway/factory/DoctorFactory.java
++++ b/src/main/java/br/com/api_mediway/doctor/factory/DoctorFactory.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.doctor.factory;
+ 
+-import br.com.api_mediway.dto.request.doctor.AddInfosDoctorDTO;
+-import br.com.api_mediway.dto.request.doctor.UpdateDoctorInfosDTO;
+-import br.com.api_mediway.entites.DoctorInfos;
+-import br.com.api_mediway.entites.User;
++import br.com.api_mediway.doctor.dto.request.AddInfosDoctorDTO;
++import br.com.api_mediway.doctor.dto.request.UpdateDoctorInfosDTO;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.user.entity.User;
+ 
+ import java.util.Optional;
+ 
+diff --git a/src/main/java/br/com/api_mediway/mapper/DoctorMapper.java b/src/main/java/br/com/api_mediway/doctor/mapper/DoctorMapper.java
+similarity index 81%
+rename from src/main/java/br/com/api_mediway/mapper/DoctorMapper.java
+rename to src/main/java/br/com/api_mediway/doctor/mapper/DoctorMapper.java
+index d61096b..4a3c059 100644
+--- a/src/main/java/br/com/api_mediway/mapper/DoctorMapper.java
++++ b/src/main/java/br/com/api_mediway/doctor/mapper/DoctorMapper.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.doctor.mapper;
+ 
+ 
+-import br.com.api_mediway.dto.response.doctor.DoctorResponseDTO;
+-import br.com.api_mediway.entites.DoctorInfos;
+-import br.com.api_mediway.entites.Role;
++import br.com.api_mediway.doctor.dto.response.DoctorResponseDTO;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.user.entity.Role;
+ 
+ import java.util.List;
+ 
+diff --git a/src/main/java/br/com/api_mediway/repository/DoctorInfosRepository.java b/src/main/java/br/com/api_mediway/doctor/repository/DoctorInfosRepository.java
+similarity index 76%
+rename from src/main/java/br/com/api_mediway/repository/DoctorInfosRepository.java
+rename to src/main/java/br/com/api_mediway/doctor/repository/DoctorInfosRepository.java
+index 0941db2..a5f76f7 100644
+--- a/src/main/java/br/com/api_mediway/repository/DoctorInfosRepository.java
++++ b/src/main/java/br/com/api_mediway/doctor/repository/DoctorInfosRepository.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.doctor.repository;
+ 
+-import br.com.api_mediway.entites.DoctorInfos;
+-import br.com.api_mediway.enums.DoctorAndCaregiverAvailability;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/controller/ExamController.java b/src/main/java/br/com/api_mediway/exam/ExamController.java
+similarity index 93%
+rename from src/main/java/br/com/api_mediway/controller/ExamController.java
+rename to src/main/java/br/com/api_mediway/exam/ExamController.java
+index 0decbac..3808732 100644
+--- a/src/main/java/br/com/api_mediway/controller/ExamController.java
++++ b/src/main/java/br/com/api_mediway/exam/ExamController.java
+@@ -1,10 +1,10 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.exam;
+ 
+-import br.com.api_mediway.dto.request.exam.ExamRequestDTO;
+-import br.com.api_mediway.dto.request.exam.UpdateExamDTO;
+-import br.com.api_mediway.dto.response.Exam.ExamResponseDTO;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
+-import br.com.api_mediway.service.ExamService;
++import br.com.api_mediway.exam.dto.request.ExamRequestDTO;
++import br.com.api_mediway.exam.dto.request.UpdateExamDTO;
++import br.com.api_mediway.exam.dto.response.ExamResponseDTO;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.exam.ExamService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.format.annotation.DateTimeFormat;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/service/ExamService.java b/src/main/java/br/com/api_mediway/exam/ExamService.java
+similarity index 88%
+rename from src/main/java/br/com/api_mediway/service/ExamService.java
+rename to src/main/java/br/com/api_mediway/exam/ExamService.java
+index 71c9ef1..730e70c 100644
+--- a/src/main/java/br/com/api_mediway/service/ExamService.java
++++ b/src/main/java/br/com/api_mediway/exam/ExamService.java
+@@ -1,17 +1,17 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.exam.ExamRequestDTO;
+-import br.com.api_mediway.dto.request.exam.UpdateExamDTO;
+-import br.com.api_mediway.dto.response.Exam.ExamResponseDTO;
+-import br.com.api_mediway.entites.Exam;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.factory.ExamFactory;
+-import br.com.api_mediway.mapper.ExamMapper;
+-import br.com.api_mediway.repository.ExamRepository;
+-import br.com.api_mediway.repository.PatientInfosRepository;
+-import br.com.api_mediway.utils.UtilsService;
++package br.com.api_mediway.exam;
++
++import br.com.api_mediway.exam.dto.request.ExamRequestDTO;
++import br.com.api_mediway.exam.dto.request.UpdateExamDTO;
++import br.com.api_mediway.exam.dto.response.ExamResponseDTO;
++import br.com.api_mediway.exam.entity.Exam;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.exam.factory.ExamFactory;
++import br.com.api_mediway.exam.mapper.ExamMapper;
++import br.com.api_mediway.exam.repository.ExamRepository;
++import br.com.api_mediway.patient.repository.PatientInfosRepository;
++import br.com.api_mediway.common.util.UtilsService;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/exam/ExamCancellationRequestDTO.java b/src/main/java/br/com/api_mediway/exam/dto/request/ExamCancellationRequestDTO.java
+similarity index 71%
+rename from src/main/java/br/com/api_mediway/dto/request/exam/ExamCancellationRequestDTO.java
+rename to src/main/java/br/com/api_mediway/exam/dto/request/ExamCancellationRequestDTO.java
+index cdc3772..b3b57a8 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/exam/ExamCancellationRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/exam/dto/request/ExamCancellationRequestDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.exam;
++package br.com.api_mediway.exam.dto.request;
+ 
+ import java.time.LocalDate;
+ 
+diff --git a/src/main/java/br/com/api_mediway/dto/request/exam/ExamRequestDTO.java b/src/main/java/br/com/api_mediway/exam/dto/request/ExamRequestDTO.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/dto/request/exam/ExamRequestDTO.java
+rename to src/main/java/br/com/api_mediway/exam/dto/request/ExamRequestDTO.java
+index 4a1cc3c..8b99b71 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/exam/ExamRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/exam/dto/request/ExamRequestDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.exam;
++package br.com.api_mediway.exam.dto.request;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalTime;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/exam/UpdateExamDTO.java b/src/main/java/br/com/api_mediway/exam/dto/request/UpdateExamDTO.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/dto/request/exam/UpdateExamDTO.java
+rename to src/main/java/br/com/api_mediway/exam/dto/request/UpdateExamDTO.java
+index 53a3927..38e508a 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/exam/UpdateExamDTO.java
++++ b/src/main/java/br/com/api_mediway/exam/dto/request/UpdateExamDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.exam;
++package br.com.api_mediway.exam.dto.request;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalTime;
+diff --git a/src/main/java/br/com/api_mediway/dto/response/Exam/ExamResponseDTO.java b/src/main/java/br/com/api_mediway/exam/dto/response/ExamResponseDTO.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/dto/response/Exam/ExamResponseDTO.java
+rename to src/main/java/br/com/api_mediway/exam/dto/response/ExamResponseDTO.java
+index 9fa64e8..b4345af 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/Exam/ExamResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/exam/dto/response/ExamResponseDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.response.Exam;
++package br.com.api_mediway.exam.dto.response;
+ 
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalDateTime;
+diff --git a/src/main/java/br/com/api_mediway/entites/Exam.java b/src/main/java/br/com/api_mediway/exam/entity/Exam.java
+similarity index 84%
+rename from src/main/java/br/com/api_mediway/entites/Exam.java
+rename to src/main/java/br/com/api_mediway/exam/entity/Exam.java
+index 368ca4c..228eb54 100644
+--- a/src/main/java/br/com/api_mediway/entites/Exam.java
++++ b/src/main/java/br/com/api_mediway/exam/entity/Exam.java
+@@ -1,6 +1,8 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.exam.entity;
+ 
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.patient.entity.PatientInfos;
++
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ 
+diff --git a/src/main/java/br/com/api_mediway/factory/ExamFactory.java b/src/main/java/br/com/api_mediway/exam/factory/ExamFactory.java
+similarity index 61%
+rename from src/main/java/br/com/api_mediway/factory/ExamFactory.java
+rename to src/main/java/br/com/api_mediway/exam/factory/ExamFactory.java
+index 1e48831..5d82035 100644
+--- a/src/main/java/br/com/api_mediway/factory/ExamFactory.java
++++ b/src/main/java/br/com/api_mediway/exam/factory/ExamFactory.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.exam.factory;
+ 
+-import br.com.api_mediway.dto.request.exam.ExamRequestDTO;
+-import br.com.api_mediway.entites.Exam;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.exam.dto.request.ExamRequestDTO;
++import br.com.api_mediway.exam.entity.Exam;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ 
+ public class ExamFactory {
+ 
+diff --git a/src/main/java/br/com/api_mediway/mapper/ExamMapper.java b/src/main/java/br/com/api_mediway/exam/mapper/ExamMapper.java
+similarity index 84%
+rename from src/main/java/br/com/api_mediway/mapper/ExamMapper.java
+rename to src/main/java/br/com/api_mediway/exam/mapper/ExamMapper.java
+index f95307c..d42fc6e 100644
+--- a/src/main/java/br/com/api_mediway/mapper/ExamMapper.java
++++ b/src/main/java/br/com/api_mediway/exam/mapper/ExamMapper.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.exam.mapper;
+ 
+ 
+-import br.com.api_mediway.dto.response.Exam.ExamResponseDTO;
+-import br.com.api_mediway.entites.Exam;
++import br.com.api_mediway.exam.dto.response.ExamResponseDTO;
++import br.com.api_mediway.exam.entity.Exam;
+ 
+ public class ExamMapper {
+ 
+diff --git a/src/main/java/br/com/api_mediway/repository/ExamRepository.java b/src/main/java/br/com/api_mediway/exam/repository/ExamRepository.java
+similarity index 74%
+rename from src/main/java/br/com/api_mediway/repository/ExamRepository.java
+rename to src/main/java/br/com/api_mediway/exam/repository/ExamRepository.java
+index 38804d0..d212773 100644
+--- a/src/main/java/br/com/api_mediway/repository/ExamRepository.java
++++ b/src/main/java/br/com/api_mediway/exam/repository/ExamRepository.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.exam.repository;
+ 
+-import br.com.api_mediway.entites.Exam;
+-import br.com.api_mediway.enums.ConsultationAndExmStatus;
++import br.com.api_mediway.exam.entity.Exam;
++import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/controller/MedicationController.java b/src/main/java/br/com/api_mediway/medication/MedicationController.java
+similarity index 91%
+rename from src/main/java/br/com/api_mediway/controller/MedicationController.java
+rename to src/main/java/br/com/api_mediway/medication/MedicationController.java
+index cee4dde..c77d80a 100644
+--- a/src/main/java/br/com/api_mediway/controller/MedicationController.java
++++ b/src/main/java/br/com/api_mediway/medication/MedicationController.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.medication;
+ 
+-import br.com.api_mediway.dto.request.medication.MedicationRequestDTO;
+-import br.com.api_mediway.dto.response.medication.MedicationResponseDTO;
+-import br.com.api_mediway.enums.MedicationStatus;
+-import br.com.api_mediway.service.MedicationService;
++import br.com.api_mediway.medication.dto.request.MedicationRequestDTO;
++import br.com.api_mediway.medication.dto.response.MedicationResponseDTO;
++import br.com.api_mediway.medication.enums.MedicationStatus;
++import br.com.api_mediway.medication.MedicationService;
+ import jakarta.validation.Valid;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/service/MedicationService.java b/src/main/java/br/com/api_mediway/medication/MedicationService.java
+similarity index 81%
+rename from src/main/java/br/com/api_mediway/service/MedicationService.java
+rename to src/main/java/br/com/api_mediway/medication/MedicationService.java
+index cfe111d..346fb85 100644
+--- a/src/main/java/br/com/api_mediway/service/MedicationService.java
++++ b/src/main/java/br/com/api_mediway/medication/MedicationService.java
+@@ -1,18 +1,18 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.medication.MedicationRequestDTO;
+-import br.com.api_mediway.dto.response.medication.MedicationResponseDTO;
+-import br.com.api_mediway.entites.Medication;
+-import br.com.api_mediway.entites.MedicineBox;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.enums.MedicationStatus;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.factory.MedicationFactory;
+-import br.com.api_mediway.mapper.MedicationMapper;
+-import br.com.api_mediway.repository.MedicationRepository;
+-import br.com.api_mediway.repository.MedicineBoxRepository;
+-import br.com.api_mediway.repository.PatientInfosRepository;
+-import br.com.api_mediway.utils.UtilsService;
++package br.com.api_mediway.medication;
++
++import br.com.api_mediway.medication.dto.request.MedicationRequestDTO;
++import br.com.api_mediway.medication.dto.response.MedicationResponseDTO;
++import br.com.api_mediway.medication.entity.Medication;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.medication.enums.MedicationStatus;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.medication.factory.MedicationFactory;
++import br.com.api_mediway.medication.mapper.MedicationMapper;
++import br.com.api_mediway.medication.repository.MedicationRepository;
++import br.com.api_mediway.medicinebox.repository.MedicineBoxRepository;
++import br.com.api_mediway.patient.repository.PatientInfosRepository;
++import br.com.api_mediway.common.util.UtilsService;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/medication/MedicationRequestDTO.java b/src/main/java/br/com/api_mediway/medication/dto/request/MedicationRequestDTO.java
+similarity index 71%
+rename from src/main/java/br/com/api_mediway/dto/request/medication/MedicationRequestDTO.java
+rename to src/main/java/br/com/api_mediway/medication/dto/request/MedicationRequestDTO.java
+index 487547b..e425a54 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/medication/MedicationRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/medication/dto/request/MedicationRequestDTO.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.dto.request.medication;
++package br.com.api_mediway.medication.dto.request;
+ 
+-import br.com.api_mediway.enums.MedicationStatus;
+-import br.com.api_mediway.enums.MedicationType;
++import br.com.api_mediway.medication.enums.MedicationStatus;
++import br.com.api_mediway.medication.enums.MedicationType;
+ 
+ import java.time.LocalTime;
+ import java.util.List;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/medication/UpdateMedicationDTO.java b/src/main/java/br/com/api_mediway/medication/dto/request/UpdateMedicationDTO.java
+similarity index 67%
+rename from src/main/java/br/com/api_mediway/dto/request/medication/UpdateMedicationDTO.java
+rename to src/main/java/br/com/api_mediway/medication/dto/request/UpdateMedicationDTO.java
+index c77fb65..7b31fab 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/medication/UpdateMedicationDTO.java
++++ b/src/main/java/br/com/api_mediway/medication/dto/request/UpdateMedicationDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.request.medication;
++package br.com.api_mediway.medication.dto.request;
+ 
+-import br.com.api_mediway.enums.MedicationStatus;
++import br.com.api_mediway.medication.enums.MedicationStatus;
+ 
+ import java.time.LocalTime;
+ import java.util.List;
+diff --git a/src/main/java/br/com/api_mediway/dto/response/medication/MedicationResponseDTO.java b/src/main/java/br/com/api_mediway/medication/dto/response/MedicationResponseDTO.java
+similarity index 71%
+rename from src/main/java/br/com/api_mediway/dto/response/medication/MedicationResponseDTO.java
+rename to src/main/java/br/com/api_mediway/medication/dto/response/MedicationResponseDTO.java
+index 93911f5..896dbc2 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/medication/MedicationResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/medication/dto/response/MedicationResponseDTO.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.dto.response.medication;
++package br.com.api_mediway.medication.dto.response;
+ 
+-import br.com.api_mediway.enums.MedicationStatus;
+-import br.com.api_mediway.enums.MedicationType;
++import br.com.api_mediway.medication.enums.MedicationStatus;
++import br.com.api_mediway.medication.enums.MedicationType;
+ 
+ import java.time.LocalTime;
+ import java.util.List;
+diff --git a/src/main/java/br/com/api_mediway/entites/Medication.java b/src/main/java/br/com/api_mediway/medication/entity/Medication.java
+similarity index 79%
+rename from src/main/java/br/com/api_mediway/entites/Medication.java
+rename to src/main/java/br/com/api_mediway/medication/entity/Medication.java
+index b6b4000..6480696 100644
+--- a/src/main/java/br/com/api_mediway/entites/Medication.java
++++ b/src/main/java/br/com/api_mediway/medication/entity/Medication.java
+@@ -1,7 +1,10 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.medication.entity;
+ 
+-import br.com.api_mediway.enums.MedicationStatus;
+-import br.com.api_mediway.enums.MedicationType;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
++import br.com.api_mediway.patient.entity.PatientInfos;
++
++import br.com.api_mediway.medication.enums.MedicationStatus;
++import br.com.api_mediway.medication.enums.MedicationType;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ 
+diff --git a/src/main/java/br/com/api_mediway/enums/MedicationStatus.java b/src/main/java/br/com/api_mediway/medication/enums/MedicationStatus.java
+similarity index 84%
+rename from src/main/java/br/com/api_mediway/enums/MedicationStatus.java
+rename to src/main/java/br/com/api_mediway/medication/enums/MedicationStatus.java
+index 5428505..7b1a9c8 100644
+--- a/src/main/java/br/com/api_mediway/enums/MedicationStatus.java
++++ b/src/main/java/br/com/api_mediway/medication/enums/MedicationStatus.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.medication.enums;
+ 
+ public enum MedicationStatus {
+     ATIVO("Ativo"),
+diff --git a/src/main/java/br/com/api_mediway/enums/MedicationType.java b/src/main/java/br/com/api_mediway/medication/enums/MedicationType.java
+similarity index 88%
+rename from src/main/java/br/com/api_mediway/enums/MedicationType.java
+rename to src/main/java/br/com/api_mediway/medication/enums/MedicationType.java
+index 301490e..9d0f109 100644
+--- a/src/main/java/br/com/api_mediway/enums/MedicationType.java
++++ b/src/main/java/br/com/api_mediway/medication/enums/MedicationType.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.medication.enums;
+ 
+ public enum MedicationType {
+     GENERICO("Genérico"),
+diff --git a/src/main/java/br/com/api_mediway/factory/MedicationFactory.java b/src/main/java/br/com/api_mediway/medication/factory/MedicationFactory.java
+similarity index 77%
+rename from src/main/java/br/com/api_mediway/factory/MedicationFactory.java
+rename to src/main/java/br/com/api_mediway/medication/factory/MedicationFactory.java
+index 1c0ea21..55a0205 100644
+--- a/src/main/java/br/com/api_mediway/factory/MedicationFactory.java
++++ b/src/main/java/br/com/api_mediway/medication/factory/MedicationFactory.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.medication.factory;
+ 
+-import br.com.api_mediway.dto.request.medication.MedicationRequestDTO;
+-import br.com.api_mediway.entites.Medication;
+-import br.com.api_mediway.entites.MedicineBox;
+-import br.com.api_mediway.entites.PatientInfos;
++import br.com.api_mediway.medication.dto.request.MedicationRequestDTO;
++import br.com.api_mediway.medication.entity.Medication;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
++import br.com.api_mediway.patient.entity.PatientInfos;
+ import org.springframework.stereotype.Component;
+ 
+ @Component
+diff --git a/src/main/java/br/com/api_mediway/mapper/MedicationMapper.java b/src/main/java/br/com/api_mediway/medication/mapper/MedicationMapper.java
+similarity index 80%
+rename from src/main/java/br/com/api_mediway/mapper/MedicationMapper.java
+rename to src/main/java/br/com/api_mediway/medication/mapper/MedicationMapper.java
+index eaa1ecf..39e03c3 100644
+--- a/src/main/java/br/com/api_mediway/mapper/MedicationMapper.java
++++ b/src/main/java/br/com/api_mediway/medication/mapper/MedicationMapper.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.medication.mapper;
+ 
+-import br.com.api_mediway.dto.response.medication.MedicationResponseDTO;
+-import br.com.api_mediway.entites.Medication;
++import br.com.api_mediway.medication.dto.response.MedicationResponseDTO;
++import br.com.api_mediway.medication.entity.Medication;
+ 
+ public class MedicationMapper {
+ 
+diff --git a/src/main/java/br/com/api_mediway/repository/MedicationRepository.java b/src/main/java/br/com/api_mediway/medication/repository/MedicationRepository.java
+similarity index 68%
+rename from src/main/java/br/com/api_mediway/repository/MedicationRepository.java
+rename to src/main/java/br/com/api_mediway/medication/repository/MedicationRepository.java
+index 651747b..71a4408 100644
+--- a/src/main/java/br/com/api_mediway/repository/MedicationRepository.java
++++ b/src/main/java/br/com/api_mediway/medication/repository/MedicationRepository.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.medication.repository;
+ 
+-import br.com.api_mediway.entites.Medication;
+-import br.com.api_mediway.enums.MedicationStatus;
+-import br.com.api_mediway.enums.MedicationType;
++import br.com.api_mediway.medication.entity.Medication;
++import br.com.api_mediway.medication.enums.MedicationStatus;
++import br.com.api_mediway.medication.enums.MedicationType;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/controller/MedicineBoxController.java b/src/main/java/br/com/api_mediway/medicinebox/MedicineBoxController.java
+similarity index 92%
+rename from src/main/java/br/com/api_mediway/controller/MedicineBoxController.java
+rename to src/main/java/br/com/api_mediway/medicinebox/MedicineBoxController.java
+index 63b3b67..e5e0045 100644
+--- a/src/main/java/br/com/api_mediway/controller/MedicineBoxController.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/MedicineBoxController.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.medicinebox;
+ 
+-import br.com.api_mediway.dto.response.medicineBox.MedicineBoxResponseDTO;
+-import br.com.api_mediway.service.MedicineBoxService;
+-import br.com.api_mediway.utils.UtilsService;
++import br.com.api_mediway.medicinebox.dto.response.MedicineBoxResponseDTO;
++import br.com.api_mediway.medicinebox.MedicineBoxService;
++import br.com.api_mediway.common.util.UtilsService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.security.access.prepost.PreAuthorize;
+diff --git a/src/main/java/br/com/api_mediway/service/MedicineBoxService.java b/src/main/java/br/com/api_mediway/medicinebox/MedicineBoxService.java
+similarity index 80%
+rename from src/main/java/br/com/api_mediway/service/MedicineBoxService.java
+rename to src/main/java/br/com/api_mediway/medicinebox/MedicineBoxService.java
+index c6f6339..e29b696 100644
+--- a/src/main/java/br/com/api_mediway/service/MedicineBoxService.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/MedicineBoxService.java
+@@ -1,15 +1,15 @@
+-package br.com.api_mediway.service;
++package br.com.api_mediway.medicinebox;
+ 
+-import br.com.api_mediway.dto.request.medicineBox.MedicineBoxRequestDTO;
+-import br.com.api_mediway.dto.response.medicineBox.MedicineBoxResponseDTO;
+-import br.com.api_mediway.entites.Medication;
+-import br.com.api_mediway.entites.MedicineBox;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.factory.MedicineBoxFactory;
+-import br.com.api_mediway.mapper.MedicineBoxMapper;
+-import br.com.api_mediway.repository.MedicationRepository;
+-import br.com.api_mediway.repository.MedicineBoxRepository;
+-import br.com.api_mediway.repository.PatientInfosRepository;
++import br.com.api_mediway.medicinebox.dto.request.MedicineBoxRequestDTO;
++import br.com.api_mediway.medicinebox.dto.response.MedicineBoxResponseDTO;
++import br.com.api_mediway.medication.entity.Medication;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.medicinebox.factory.MedicineBoxFactory;
++import br.com.api_mediway.medicinebox.mapper.MedicineBoxMapper;
++import br.com.api_mediway.medication.repository.MedicationRepository;
++import br.com.api_mediway.medicinebox.repository.MedicineBoxRepository;
++import br.com.api_mediway.patient.repository.PatientInfosRepository;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/medicineBox/MedicineBoxRequestDTO.java b/src/main/java/br/com/api_mediway/medicinebox/dto/request/MedicineBoxRequestDTO.java
+similarity index 55%
+rename from src/main/java/br/com/api_mediway/dto/request/medicineBox/MedicineBoxRequestDTO.java
+rename to src/main/java/br/com/api_mediway/medicinebox/dto/request/MedicineBoxRequestDTO.java
+index d1a7b2b..e1a5613 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/medicineBox/MedicineBoxRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/dto/request/MedicineBoxRequestDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.request.medicineBox;
++package br.com.api_mediway.medicinebox.dto.request;
+ 
+ public record MedicineBoxRequestDTO(
+         String nome
+diff --git a/src/main/java/br/com/api_mediway/dto/response/medicineBox/MedicineBoxResponseDTO.java b/src/main/java/br/com/api_mediway/medicinebox/dto/response/MedicineBoxResponseDTO.java
+similarity index 70%
+rename from src/main/java/br/com/api_mediway/dto/response/medicineBox/MedicineBoxResponseDTO.java
+rename to src/main/java/br/com/api_mediway/medicinebox/dto/response/MedicineBoxResponseDTO.java
+index c83551a..8043a7e 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/medicineBox/MedicineBoxResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/dto/response/MedicineBoxResponseDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.response.medicineBox;
++package br.com.api_mediway.medicinebox.dto.response;
+ 
+-import br.com.api_mediway.dto.response.medication.MedicationResponseDTO;
++import br.com.api_mediway.medication.dto.response.MedicationResponseDTO;
+ 
+ import java.util.List;
+ 
+diff --git a/src/main/java/br/com/api_mediway/entites/MedicineBox.java b/src/main/java/br/com/api_mediway/medicinebox/entity/MedicineBox.java
+similarity index 81%
+rename from src/main/java/br/com/api_mediway/entites/MedicineBox.java
+rename to src/main/java/br/com/api_mediway/medicinebox/entity/MedicineBox.java
+index a1d599f..26f28ed 100644
+--- a/src/main/java/br/com/api_mediway/entites/MedicineBox.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/entity/MedicineBox.java
+@@ -1,4 +1,7 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.medicinebox.entity;
++
++import br.com.api_mediway.medication.entity.Medication;
++import br.com.api_mediway.patient.entity.PatientInfos;
+ 
+ import jakarta.persistence.*;
+ import lombok.Data;
+diff --git a/src/main/java/br/com/api_mediway/factory/MedicineBoxFactory.java b/src/main/java/br/com/api_mediway/medicinebox/factory/MedicineBoxFactory.java
+similarity index 61%
+rename from src/main/java/br/com/api_mediway/factory/MedicineBoxFactory.java
+rename to src/main/java/br/com/api_mediway/medicinebox/factory/MedicineBoxFactory.java
+index cdbaba6..b4b120d 100644
+--- a/src/main/java/br/com/api_mediway/factory/MedicineBoxFactory.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/factory/MedicineBoxFactory.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.medicinebox.factory;
+ 
+ 
+-import br.com.api_mediway.dto.request.medicineBox.MedicineBoxRequestDTO;
+-import br.com.api_mediway.entites.MedicineBox;
+-import br.com.api_mediway.entites.PatientInfos;
++import br.com.api_mediway.medicinebox.dto.request.MedicineBoxRequestDTO;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
++import br.com.api_mediway.patient.entity.PatientInfos;
+ import org.springframework.stereotype.Component;
+ 
+ @Component
+diff --git a/src/main/java/br/com/api_mediway/mapper/MedicineBoxMapper.java b/src/main/java/br/com/api_mediway/medicinebox/mapper/MedicineBoxMapper.java
+similarity index 78%
+rename from src/main/java/br/com/api_mediway/mapper/MedicineBoxMapper.java
+rename to src/main/java/br/com/api_mediway/medicinebox/mapper/MedicineBoxMapper.java
+index 66acb0d..9d5d0b7 100644
+--- a/src/main/java/br/com/api_mediway/mapper/MedicineBoxMapper.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/mapper/MedicineBoxMapper.java
+@@ -1,8 +1,9 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.medicinebox.mapper;
+ 
+-import br.com.api_mediway.dto.response.medicineBox.MedicineBoxResponseDTO;
+-import br.com.api_mediway.entites.Medication;
+-import br.com.api_mediway.entites.MedicineBox;
++import br.com.api_mediway.medicinebox.dto.response.MedicineBoxResponseDTO;
++import br.com.api_mediway.medication.entity.Medication;
++import br.com.api_mediway.medication.mapper.MedicationMapper;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
+ 
+ import java.util.List;
+ import java.util.Map;
+diff --git a/src/main/java/br/com/api_mediway/repository/MedicineBoxRepository.java b/src/main/java/br/com/api_mediway/medicinebox/repository/MedicineBoxRepository.java
+similarity index 74%
+rename from src/main/java/br/com/api_mediway/repository/MedicineBoxRepository.java
+rename to src/main/java/br/com/api_mediway/medicinebox/repository/MedicineBoxRepository.java
+index 29150a2..6ed1154 100644
+--- a/src/main/java/br/com/api_mediway/repository/MedicineBoxRepository.java
++++ b/src/main/java/br/com/api_mediway/medicinebox/repository/MedicineBoxRepository.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.medicinebox.repository;
+ 
+-import br.com.api_mediway.entites.MedicineBox;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ 
+ import java.util.Optional;
+diff --git a/src/main/java/br/com/api_mediway/controller/PatientController.java b/src/main/java/br/com/api_mediway/patient/PatientController.java
+similarity index 92%
+rename from src/main/java/br/com/api_mediway/controller/PatientController.java
+rename to src/main/java/br/com/api_mediway/patient/PatientController.java
+index 5b15017..0afa175 100644
+--- a/src/main/java/br/com/api_mediway/controller/PatientController.java
++++ b/src/main/java/br/com/api_mediway/patient/PatientController.java
+@@ -1,10 +1,10 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.patient;
+ 
+-import br.com.api_mediway.dto.request.patient.AddInfosPatientsDTO;
+-import br.com.api_mediway.dto.request.patient.UpdatePatientInfosDTO;
+-import br.com.api_mediway.dto.response.patient.PatientResponseInfosDTO;
+-import br.com.api_mediway.enums.ConditionStatusPatient;
+-import br.com.api_mediway.service.PatientService;
++import br.com.api_mediway.patient.dto.request.AddInfosPatientsDTO;
++import br.com.api_mediway.patient.dto.request.UpdatePatientInfosDTO;
++import br.com.api_mediway.patient.dto.response.PatientResponseInfosDTO;
++import br.com.api_mediway.patient.enums.ConditionStatusPatient;
++import br.com.api_mediway.patient.PatientService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+diff --git a/src/main/java/br/com/api_mediway/service/PatientService.java b/src/main/java/br/com/api_mediway/patient/PatientService.java
+similarity index 86%
+rename from src/main/java/br/com/api_mediway/service/PatientService.java
+rename to src/main/java/br/com/api_mediway/patient/PatientService.java
+index cc83190..9e3ae0b 100644
+--- a/src/main/java/br/com/api_mediway/service/PatientService.java
++++ b/src/main/java/br/com/api_mediway/patient/PatientService.java
+@@ -1,18 +1,18 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.patient.AddInfosPatientsDTO;
+-import br.com.api_mediway.dto.request.patient.UpdatePatientInfosDTO;
+-import br.com.api_mediway.dto.response.patient.PatientResponseInfosDTO;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.entites.User;
+-import br.com.api_mediway.enums.ConditionStatusPatient;
+-import br.com.api_mediway.exception.UserNotFoundException;
+-import br.com.api_mediway.factory.PatientFactory;
+-import br.com.api_mediway.factory.UserFactory;
+-import br.com.api_mediway.mapper.PatientMapper;
+-import br.com.api_mediway.repository.PatientInfosRepository;
+-import br.com.api_mediway.repository.UserRepository;
+-import br.com.api_mediway.utils.UtilsService;
++package br.com.api_mediway.patient;
++
++import br.com.api_mediway.patient.dto.request.AddInfosPatientsDTO;
++import br.com.api_mediway.patient.dto.request.UpdatePatientInfosDTO;
++import br.com.api_mediway.patient.dto.response.PatientResponseInfosDTO;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.user.entity.User;
++import br.com.api_mediway.patient.enums.ConditionStatusPatient;
++import br.com.api_mediway.common.exception.UserNotFoundException;
++import br.com.api_mediway.patient.factory.PatientFactory;
++import br.com.api_mediway.user.factory.UserFactory;
++import br.com.api_mediway.patient.mapper.PatientMapper;
++import br.com.api_mediway.patient.repository.PatientInfosRepository;
++import br.com.api_mediway.user.repository.UserRepository;
++import br.com.api_mediway.common.util.UtilsService;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/patient/AddInfosPatientsDTO.java b/src/main/java/br/com/api_mediway/patient/dto/request/AddInfosPatientsDTO.java
+similarity index 58%
+rename from src/main/java/br/com/api_mediway/dto/request/patient/AddInfosPatientsDTO.java
+rename to src/main/java/br/com/api_mediway/patient/dto/request/AddInfosPatientsDTO.java
+index 2c0e8f4..9157fcb 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/patient/AddInfosPatientsDTO.java
++++ b/src/main/java/br/com/api_mediway/patient/dto/request/AddInfosPatientsDTO.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.dto.request.patient;
++package br.com.api_mediway.patient.dto.request;
+ 
+-import br.com.api_mediway.enums.ConditionStatusPatient;
+-import br.com.api_mediway.enums.Gender;
++import br.com.api_mediway.patient.enums.ConditionStatusPatient;
++import br.com.api_mediway.patient.enums.Gender;
+ import java.time.LocalDate;
+ 
+ public record AddInfosPatientsDTO(
+diff --git a/src/main/java/br/com/api_mediway/dto/request/patient/UpdatePatientInfosDTO.java b/src/main/java/br/com/api_mediway/patient/dto/request/UpdatePatientInfosDTO.java
+similarity index 72%
+rename from src/main/java/br/com/api_mediway/dto/request/patient/UpdatePatientInfosDTO.java
+rename to src/main/java/br/com/api_mediway/patient/dto/request/UpdatePatientInfosDTO.java
+index 322ea7b..ad6600d 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/patient/UpdatePatientInfosDTO.java
++++ b/src/main/java/br/com/api_mediway/patient/dto/request/UpdatePatientInfosDTO.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.dto.request.patient;
++package br.com.api_mediway.patient.dto.request;
+ 
+ 
+-import br.com.api_mediway.enums.Gender;
++import br.com.api_mediway.patient.enums.Gender;
+ 
+ import java.time.LocalDate;
+ 
+diff --git a/src/main/java/br/com/api_mediway/dto/response/patient/PatientResponseInfosDTO.java b/src/main/java/br/com/api_mediway/patient/dto/response/PatientResponseInfosDTO.java
+similarity index 92%
+rename from src/main/java/br/com/api_mediway/dto/response/patient/PatientResponseInfosDTO.java
+rename to src/main/java/br/com/api_mediway/patient/dto/response/PatientResponseInfosDTO.java
+index bbadcd0..e90e0a4 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/patient/PatientResponseInfosDTO.java
++++ b/src/main/java/br/com/api_mediway/patient/dto/response/PatientResponseInfosDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.response.patient;
++package br.com.api_mediway.patient.dto.response;
+ 
+ import java.time.LocalDate;
+ import java.util.List;
+diff --git a/src/main/java/br/com/api_mediway/dto/response/patient/PatientSummaryDTO.java b/src/main/java/br/com/api_mediway/patient/dto/response/PatientSummaryDTO.java
+similarity index 74%
+rename from src/main/java/br/com/api_mediway/dto/response/patient/PatientSummaryDTO.java
+rename to src/main/java/br/com/api_mediway/patient/dto/response/PatientSummaryDTO.java
+index 9b00edc..01b83c6 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/patient/PatientSummaryDTO.java
++++ b/src/main/java/br/com/api_mediway/patient/dto/response/PatientSummaryDTO.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.dto.response.patient;
++package br.com.api_mediway.patient.dto.response;
+ 
+ import java.util.UUID;
+ 
+diff --git a/src/main/java/br/com/api_mediway/entites/PatientInfos.java b/src/main/java/br/com/api_mediway/patient/entity/PatientInfos.java
+similarity index 76%
+rename from src/main/java/br/com/api_mediway/entites/PatientInfos.java
+rename to src/main/java/br/com/api_mediway/patient/entity/PatientInfos.java
+index 8bc53b1..75a0c38 100644
+--- a/src/main/java/br/com/api_mediway/entites/PatientInfos.java
++++ b/src/main/java/br/com/api_mediway/patient/entity/PatientInfos.java
+@@ -1,7 +1,15 @@
+-package br.com.api_mediway.entites;
+-
+-import br.com.api_mediway.enums.ConditionStatusPatient;
+-import br.com.api_mediway.enums.Gender;
++package br.com.api_mediway.patient.entity;
++
++import br.com.api_mediway.consultation.entity.Consultation;
++import br.com.api_mediway.doctor.entity.DoctorInfos;
++import br.com.api_mediway.exam.entity.Exam;
++import br.com.api_mediway.medication.entity.Medication;
++import br.com.api_mediway.medicinebox.entity.MedicineBox;
++import br.com.api_mediway.user.entity.User;
++import br.com.api_mediway.vaccine.entity.Vaccine;
++
++import br.com.api_mediway.patient.enums.ConditionStatusPatient;
++import br.com.api_mediway.patient.enums.Gender;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ 
+diff --git a/src/main/java/br/com/api_mediway/enums/ConditionStatusPatient.java b/src/main/java/br/com/api_mediway/patient/enums/ConditionStatusPatient.java
+similarity index 89%
+rename from src/main/java/br/com/api_mediway/enums/ConditionStatusPatient.java
+rename to src/main/java/br/com/api_mediway/patient/enums/ConditionStatusPatient.java
+index 07f6283..113ccde 100644
+--- a/src/main/java/br/com/api_mediway/enums/ConditionStatusPatient.java
++++ b/src/main/java/br/com/api_mediway/patient/enums/ConditionStatusPatient.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.patient.enums;
+ 
+ public enum ConditionStatusPatient {
+     NESSECITA_DE_ATENCAO("Necessita de atenção"),
+diff --git a/src/main/java/br/com/api_mediway/enums/Gender.java b/src/main/java/br/com/api_mediway/patient/enums/Gender.java
+similarity index 86%
+rename from src/main/java/br/com/api_mediway/enums/Gender.java
+rename to src/main/java/br/com/api_mediway/patient/enums/Gender.java
+index e6119ec..b88b850 100644
+--- a/src/main/java/br/com/api_mediway/enums/Gender.java
++++ b/src/main/java/br/com/api_mediway/patient/enums/Gender.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.patient.enums;
+ 
+ public enum Gender {
+     MASCULINO("Masculino"),
+diff --git a/src/main/java/br/com/api_mediway/factory/PatientFactory.java b/src/main/java/br/com/api_mediway/patient/factory/PatientFactory.java
+similarity index 78%
+rename from src/main/java/br/com/api_mediway/factory/PatientFactory.java
+rename to src/main/java/br/com/api_mediway/patient/factory/PatientFactory.java
+index 965244d..6d3335d 100644
+--- a/src/main/java/br/com/api_mediway/factory/PatientFactory.java
++++ b/src/main/java/br/com/api_mediway/patient/factory/PatientFactory.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.patient.factory;
+ 
+-import br.com.api_mediway.dto.request.patient.AddInfosPatientsDTO;
+-import br.com.api_mediway.dto.request.patient.UpdatePatientInfosDTO;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.entites.User;
++import br.com.api_mediway.patient.dto.request.AddInfosPatientsDTO;
++import br.com.api_mediway.patient.dto.request.UpdatePatientInfosDTO;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.user.entity.User;
+ 
+ import java.util.Optional;
+ 
+diff --git a/src/main/java/br/com/api_mediway/mapper/PatientMapper.java b/src/main/java/br/com/api_mediway/patient/mapper/PatientMapper.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/mapper/PatientMapper.java
+rename to src/main/java/br/com/api_mediway/patient/mapper/PatientMapper.java
+index 7c82712..90512c8 100644
+--- a/src/main/java/br/com/api_mediway/mapper/PatientMapper.java
++++ b/src/main/java/br/com/api_mediway/patient/mapper/PatientMapper.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.patient.mapper;
+ 
+ 
+-import br.com.api_mediway.dto.response.patient.PatientResponseInfosDTO;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.entites.Role;
++import br.com.api_mediway.patient.dto.response.PatientResponseInfosDTO;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.user.entity.Role;
+ 
+ import java.util.List;
+ 
+diff --git a/src/main/java/br/com/api_mediway/repository/PatientInfosRepository.java b/src/main/java/br/com/api_mediway/patient/repository/PatientInfosRepository.java
+similarity index 81%
+rename from src/main/java/br/com/api_mediway/repository/PatientInfosRepository.java
+rename to src/main/java/br/com/api_mediway/patient/repository/PatientInfosRepository.java
+index d5682f1..535b03d 100644
+--- a/src/main/java/br/com/api_mediway/repository/PatientInfosRepository.java
++++ b/src/main/java/br/com/api_mediway/patient/repository/PatientInfosRepository.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.patient.repository;
+ 
+-import br.com.api_mediway.entites.PatientInfos;
++import br.com.api_mediway.patient.entity.PatientInfos;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/dto/response/user/UserResponseDTO.java b/src/main/java/br/com/api_mediway/user/dto/response/UserResponseDTO.java
+similarity index 75%
+rename from src/main/java/br/com/api_mediway/dto/response/user/UserResponseDTO.java
+rename to src/main/java/br/com/api_mediway/user/dto/response/UserResponseDTO.java
+index 6c95872..f064be5 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/user/UserResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/user/dto/response/UserResponseDTO.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.dto.response.user;
++package br.com.api_mediway.user.dto.response;
+ 
+-import br.com.api_mediway.entites.Role;
++import br.com.api_mediway.user.entity.Role;
+ 
+ import java.util.Set;
+ import java.util.UUID;
+diff --git a/src/main/java/br/com/api_mediway/entites/Role.java b/src/main/java/br/com/api_mediway/user/entity/Role.java
+similarity index 94%
+rename from src/main/java/br/com/api_mediway/entites/Role.java
+rename to src/main/java/br/com/api_mediway/user/entity/Role.java
+index 9791358..8abb290 100644
+--- a/src/main/java/br/com/api_mediway/entites/Role.java
++++ b/src/main/java/br/com/api_mediway/user/entity/Role.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.user.entity;
+ 
+ import jakarta.persistence.*;
+ 
+diff --git a/src/main/java/br/com/api_mediway/entites/User.java b/src/main/java/br/com/api_mediway/user/entity/User.java
+similarity index 90%
+rename from src/main/java/br/com/api_mediway/entites/User.java
+rename to src/main/java/br/com/api_mediway/user/entity/User.java
+index ba732d7..52c0a36 100644
+--- a/src/main/java/br/com/api_mediway/entites/User.java
++++ b/src/main/java/br/com/api_mediway/user/entity/User.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.user.entity;
+ 
+-import br.com.api_mediway.dto.request.auth.LoginRequestDTO;
++import br.com.api_mediway.auth.dto.request.LoginRequestDTO;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ import org.springframework.security.crypto.password.PasswordEncoder;
+diff --git a/src/main/java/br/com/api_mediway/factory/UserFactory.java b/src/main/java/br/com/api_mediway/user/factory/UserFactory.java
+similarity index 80%
+rename from src/main/java/br/com/api_mediway/factory/UserFactory.java
+rename to src/main/java/br/com/api_mediway/user/factory/UserFactory.java
+index 15504a8..7b8d506 100644
+--- a/src/main/java/br/com/api_mediway/factory/UserFactory.java
++++ b/src/main/java/br/com/api_mediway/user/factory/UserFactory.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.user.factory;
+ 
+-import br.com.api_mediway.dto.request.doctor.UpdateDoctorInfosDTO;
+-import br.com.api_mediway.dto.request.patient.UpdatePatientInfosDTO;
+-import br.com.api_mediway.entites.User;
++import br.com.api_mediway.doctor.dto.request.UpdateDoctorInfosDTO;
++import br.com.api_mediway.patient.dto.request.UpdatePatientInfosDTO;
++import br.com.api_mediway.user.entity.User;
+ 
+ import java.util.Optional;
+ 
+diff --git a/src/main/java/br/com/api_mediway/mapper/UserMapper.java b/src/main/java/br/com/api_mediway/user/mapper/UserMapper.java
+similarity index 68%
+rename from src/main/java/br/com/api_mediway/mapper/UserMapper.java
+rename to src/main/java/br/com/api_mediway/user/mapper/UserMapper.java
+index 687cdce..7caadc8 100644
+--- a/src/main/java/br/com/api_mediway/mapper/UserMapper.java
++++ b/src/main/java/br/com/api_mediway/user/mapper/UserMapper.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.user.mapper;
+ 
+-import br.com.api_mediway.dto.response.user.UserResponseDTO;
+-import br.com.api_mediway.entites.Role;
+-import br.com.api_mediway.entites.User;
++import br.com.api_mediway.user.dto.response.UserResponseDTO;
++import br.com.api_mediway.user.entity.Role;
++import br.com.api_mediway.user.entity.User;
+ 
+ import java.util.Set;
+ 
+diff --git a/src/main/java/br/com/api_mediway/repository/RoleRepository.java b/src/main/java/br/com/api_mediway/user/repository/RoleRepository.java
+similarity index 72%
+rename from src/main/java/br/com/api_mediway/repository/RoleRepository.java
+rename to src/main/java/br/com/api_mediway/user/repository/RoleRepository.java
+index 225905a..9e98dcf 100644
+--- a/src/main/java/br/com/api_mediway/repository/RoleRepository.java
++++ b/src/main/java/br/com/api_mediway/user/repository/RoleRepository.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.user.repository;
+ 
+-import br.com.api_mediway.entites.Role;
++import br.com.api_mediway.user.entity.Role;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/repository/UserRepository.java b/src/main/java/br/com/api_mediway/user/repository/UserRepository.java
+similarity index 79%
+rename from src/main/java/br/com/api_mediway/repository/UserRepository.java
+rename to src/main/java/br/com/api_mediway/user/repository/UserRepository.java
+index 48c03d3..8b503e9 100644
+--- a/src/main/java/br/com/api_mediway/repository/UserRepository.java
++++ b/src/main/java/br/com/api_mediway/user/repository/UserRepository.java
+@@ -1,6 +1,6 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.user.repository;
+ 
+-import br.com.api_mediway.entites.User;
++import br.com.api_mediway.user.entity.User;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+diff --git a/src/main/java/br/com/api_mediway/controller/VaccineController.java b/src/main/java/br/com/api_mediway/vaccine/VaccineController.java
+similarity index 94%
+rename from src/main/java/br/com/api_mediway/controller/VaccineController.java
+rename to src/main/java/br/com/api_mediway/vaccine/VaccineController.java
+index 4bf3e15..5e96066 100644
+--- a/src/main/java/br/com/api_mediway/controller/VaccineController.java
++++ b/src/main/java/br/com/api_mediway/vaccine/VaccineController.java
+@@ -1,9 +1,9 @@
+-package br.com.api_mediway.controller;
++package br.com.api_mediway.vaccine;
+ 
+-import br.com.api_mediway.dto.request.vaccine.VaccineRequestDTO;
+-import br.com.api_mediway.dto.response.vaccine.VaccineResponseDTO;
+-import br.com.api_mediway.enums.VaccineStatus;
+-import br.com.api_mediway.service.VaccineService;
++import br.com.api_mediway.vaccine.dto.request.VaccineRequestDTO;
++import br.com.api_mediway.vaccine.dto.response.VaccineResponseDTO;
++import br.com.api_mediway.vaccine.enums.VaccineStatus;
++import br.com.api_mediway.vaccine.VaccineService;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+diff --git a/src/main/java/br/com/api_mediway/service/VaccineService.java b/src/main/java/br/com/api_mediway/vaccine/VaccineService.java
+similarity index 85%
+rename from src/main/java/br/com/api_mediway/service/VaccineService.java
+rename to src/main/java/br/com/api_mediway/vaccine/VaccineService.java
+index 438bb97..986a0a4 100644
+--- a/src/main/java/br/com/api_mediway/service/VaccineService.java
++++ b/src/main/java/br/com/api_mediway/vaccine/VaccineService.java
+@@ -1,14 +1,14 @@
+-package br.com.api_mediway.service;
+-
+-import br.com.api_mediway.dto.request.vaccine.VaccineRequestDTO;
+-import br.com.api_mediway.dto.response.vaccine.VaccineResponseDTO;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.entites.Vaccine;
+-import br.com.api_mediway.enums.VaccineStatus;
+-import br.com.api_mediway.factory.VaccineFactory;
+-import br.com.api_mediway.mapper.VaccineMapper;
+-import br.com.api_mediway.repository.PatientInfosRepository;
+-import br.com.api_mediway.repository.VaccineRepository;
++package br.com.api_mediway.vaccine;
++
++import br.com.api_mediway.vaccine.dto.request.VaccineRequestDTO;
++import br.com.api_mediway.vaccine.dto.response.VaccineResponseDTO;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.vaccine.entity.Vaccine;
++import br.com.api_mediway.vaccine.enums.VaccineStatus;
++import br.com.api_mediway.vaccine.factory.VaccineFactory;
++import br.com.api_mediway.vaccine.mapper.VaccineMapper;
++import br.com.api_mediway.patient.repository.PatientInfosRepository;
++import br.com.api_mediway.vaccine.repository.VaccineRepository;
+ import jakarta.persistence.EntityNotFoundException;
+ import jakarta.transaction.Transactional;
+ import lombok.extern.slf4j.Slf4j;
+diff --git a/src/main/java/br/com/api_mediway/dto/request/vaccine/VaccineRequestDTO.java b/src/main/java/br/com/api_mediway/vaccine/dto/request/VaccineRequestDTO.java
+similarity index 65%
+rename from src/main/java/br/com/api_mediway/dto/request/vaccine/VaccineRequestDTO.java
+rename to src/main/java/br/com/api_mediway/vaccine/dto/request/VaccineRequestDTO.java
+index 0ec23cc..6db6106 100644
+--- a/src/main/java/br/com/api_mediway/dto/request/vaccine/VaccineRequestDTO.java
++++ b/src/main/java/br/com/api_mediway/vaccine/dto/request/VaccineRequestDTO.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.dto.request.vaccine;
++package br.com.api_mediway.vaccine.dto.request;
+ 
+-import br.com.api_mediway.enums.VaccineDoseType;
+-import br.com.api_mediway.enums.VaccineStatus;
++import br.com.api_mediway.vaccine.enums.VaccineDoseType;
++import br.com.api_mediway.vaccine.enums.VaccineStatus;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalDateTime;
+diff --git a/src/main/java/br/com/api_mediway/dto/response/vaccine/VaccineResponseDTO.java b/src/main/java/br/com/api_mediway/vaccine/dto/response/VaccineResponseDTO.java
+similarity index 70%
+rename from src/main/java/br/com/api_mediway/dto/response/vaccine/VaccineResponseDTO.java
+rename to src/main/java/br/com/api_mediway/vaccine/dto/response/VaccineResponseDTO.java
+index 555b333..e54875e 100644
+--- a/src/main/java/br/com/api_mediway/dto/response/vaccine/VaccineResponseDTO.java
++++ b/src/main/java/br/com/api_mediway/vaccine/dto/response/VaccineResponseDTO.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.dto.response.vaccine;
++package br.com.api_mediway.vaccine.dto.response;
+ 
+-import br.com.api_mediway.enums.VaccineDoseType;
+-import br.com.api_mediway.enums.VaccineStatus;
++import br.com.api_mediway.vaccine.enums.VaccineDoseType;
++import br.com.api_mediway.vaccine.enums.VaccineStatus;
+ 
+ import java.time.LocalDate;
+ import java.time.LocalDateTime;
+diff --git a/src/main/java/br/com/api_mediway/entites/Vaccine.java b/src/main/java/br/com/api_mediway/vaccine/entity/Vaccine.java
+similarity index 82%
+rename from src/main/java/br/com/api_mediway/entites/Vaccine.java
+rename to src/main/java/br/com/api_mediway/vaccine/entity/Vaccine.java
+index 7c75fa9..97ee628 100644
+--- a/src/main/java/br/com/api_mediway/entites/Vaccine.java
++++ b/src/main/java/br/com/api_mediway/vaccine/entity/Vaccine.java
+@@ -1,7 +1,9 @@
+-package br.com.api_mediway.entites;
++package br.com.api_mediway.vaccine.entity;
+ 
+-import br.com.api_mediway.enums.VaccineDoseType;
+-import br.com.api_mediway.enums.VaccineStatus;
++import br.com.api_mediway.patient.entity.PatientInfos;
++
++import br.com.api_mediway.vaccine.enums.VaccineDoseType;
++import br.com.api_mediway.vaccine.enums.VaccineStatus;
+ import jakarta.persistence.*;
+ import lombok.Data;
+ 
+diff --git a/src/main/java/br/com/api_mediway/enums/VaccineDoseType.java b/src/main/java/br/com/api_mediway/vaccine/enums/VaccineDoseType.java
+similarity index 88%
+rename from src/main/java/br/com/api_mediway/enums/VaccineDoseType.java
+rename to src/main/java/br/com/api_mediway/vaccine/enums/VaccineDoseType.java
+index 2be3602..5b82e2a 100644
+--- a/src/main/java/br/com/api_mediway/enums/VaccineDoseType.java
++++ b/src/main/java/br/com/api_mediway/vaccine/enums/VaccineDoseType.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.vaccine.enums;
+ 
+ public enum VaccineDoseType {
+ 
+diff --git a/src/main/java/br/com/api_mediway/enums/VaccineStatus.java b/src/main/java/br/com/api_mediway/vaccine/enums/VaccineStatus.java
+similarity index 86%
+rename from src/main/java/br/com/api_mediway/enums/VaccineStatus.java
+rename to src/main/java/br/com/api_mediway/vaccine/enums/VaccineStatus.java
+index 0f248e9..bab1e74 100644
+--- a/src/main/java/br/com/api_mediway/enums/VaccineStatus.java
++++ b/src/main/java/br/com/api_mediway/vaccine/enums/VaccineStatus.java
+@@ -1,4 +1,4 @@
+-package br.com.api_mediway.enums;
++package br.com.api_mediway.vaccine.enums;
+ 
+ public enum VaccineStatus {
+     APLICADA("Aplicada"),
+diff --git a/src/main/java/br/com/api_mediway/factory/VaccineFactory.java b/src/main/java/br/com/api_mediway/vaccine/factory/VaccineFactory.java
+similarity index 74%
+rename from src/main/java/br/com/api_mediway/factory/VaccineFactory.java
+rename to src/main/java/br/com/api_mediway/vaccine/factory/VaccineFactory.java
+index 92b0703..c04d572 100644
+--- a/src/main/java/br/com/api_mediway/factory/VaccineFactory.java
++++ b/src/main/java/br/com/api_mediway/vaccine/factory/VaccineFactory.java
+@@ -1,8 +1,8 @@
+-package br.com.api_mediway.factory;
++package br.com.api_mediway.vaccine.factory;
+ 
+-import br.com.api_mediway.dto.request.vaccine.VaccineRequestDTO;
+-import br.com.api_mediway.entites.PatientInfos;
+-import br.com.api_mediway.entites.Vaccine;
++import br.com.api_mediway.vaccine.dto.request.VaccineRequestDTO;
++import br.com.api_mediway.patient.entity.PatientInfos;
++import br.com.api_mediway.vaccine.entity.Vaccine;
+ import org.springframework.stereotype.Component;
+ 
+ @Component
+diff --git a/src/main/java/br/com/api_mediway/mapper/VaccineMapper.java b/src/main/java/br/com/api_mediway/vaccine/mapper/VaccineMapper.java
+similarity index 83%
+rename from src/main/java/br/com/api_mediway/mapper/VaccineMapper.java
+rename to src/main/java/br/com/api_mediway/vaccine/mapper/VaccineMapper.java
+index b3fbb39..57c78c0 100644
+--- a/src/main/java/br/com/api_mediway/mapper/VaccineMapper.java
++++ b/src/main/java/br/com/api_mediway/vaccine/mapper/VaccineMapper.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.mapper;
++package br.com.api_mediway.vaccine.mapper;
+ 
+-import br.com.api_mediway.dto.response.vaccine.VaccineResponseDTO;
+-import br.com.api_mediway.entites.Vaccine;
++import br.com.api_mediway.vaccine.dto.response.VaccineResponseDTO;
++import br.com.api_mediway.vaccine.entity.Vaccine;
+ import org.springframework.stereotype.Component;
+ 
+ import java.util.List;
+diff --git a/src/main/java/br/com/api_mediway/repository/VaccineRepository.java b/src/main/java/br/com/api_mediway/vaccine/repository/VaccineRepository.java
+similarity index 74%
+rename from src/main/java/br/com/api_mediway/repository/VaccineRepository.java
+rename to src/main/java/br/com/api_mediway/vaccine/repository/VaccineRepository.java
+index 385bb4b..d0f8233 100644
+--- a/src/main/java/br/com/api_mediway/repository/VaccineRepository.java
++++ b/src/main/java/br/com/api_mediway/vaccine/repository/VaccineRepository.java
+@@ -1,7 +1,7 @@
+-package br.com.api_mediway.repository;
++package br.com.api_mediway.vaccine.repository;
+ 
+-import br.com.api_mediway.entites.Vaccine;
+-import br.com.api_mediway.enums.VaccineStatus;
++import br.com.api_mediway.vaccine.entity.Vaccine;
++import br.com.api_mediway.vaccine.enums.VaccineStatus;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
