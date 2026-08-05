@@ -85,6 +85,7 @@ public class ConsultationController {
 
     // buscando consultas por status
     @GetMapping("/by-status")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_MEDICO') or hasAuthority('SCOPE_CUIDADOR')")
     public ResponseEntity<List<ConsultationResponseDTO>> getConsultationByStatus(
             @RequestParam("status") ConsultationAndExmStatus status
     ) {
