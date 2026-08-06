@@ -5,6 +5,7 @@ import br.com.api_mediway.consultation.dto.request.UpdateConsultationDTO;
 import br.com.api_mediway.consultation.dto.response.ConsultationResponseDTO;
 import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
 import br.com.api_mediway.consultation.ConsultationService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class ConsultationController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_CUIDADOR')")
     public ResponseEntity<Void> scheduleConsultation(
             @PathVariable UUID patientId,
-            @RequestBody ConsultationRequestDTO dto
+            @RequestBody @Valid ConsultationRequestDTO dto
     ) {
         log.info("[CONSULTATION] POST /consultation/schedule/{} - Scheduling new consultation", patientId);
         consultationService.scheduleConsultation(patientId, dto);
@@ -100,7 +101,7 @@ public class ConsultationController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_CUIDADOR') or hasAuthority('SCOPE_MEDICO')")
     public ResponseEntity<Void> updateConsultationInfo(
             @PathVariable Long consultationId,
-            @RequestBody UpdateConsultationDTO dto
+            @RequestBody @Valid UpdateConsultationDTO dto
     ) {
         log.info("[CONSULTATION] PUT /consultation/{}/update - Updating consultation info", consultationId);
         consultationService.updateConsultationsInfo(consultationId, dto);

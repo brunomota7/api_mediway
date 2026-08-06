@@ -4,6 +4,7 @@ import br.com.api_mediway.vaccine.dto.request.VaccineRequestDTO;
 import br.com.api_mediway.vaccine.dto.response.VaccineResponseDTO;
 import br.com.api_mediway.vaccine.enums.VaccineStatus;
 import br.com.api_mediway.vaccine.VaccineService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class VaccineController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_CUIDADOR') or hasAuthority('SCOPE_MEDICO')")
     public ResponseEntity<Void> registerVaccine(
             @PathVariable UUID patientId,
-            @RequestBody VaccineRequestDTO dto
+            @RequestBody @Valid VaccineRequestDTO dto
     ) {
         log.info("[VACCINE] POST /vaccine/register/{} - Registering vaccine", patientId);
         vaccineService.registerVaccine(patientId, dto);

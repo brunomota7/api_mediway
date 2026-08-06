@@ -3,6 +3,7 @@ package br.com.api_mediway.caregiver;
 import br.com.api_mediway.caregiver.dto.request.CaregiverRequestDTO;
 import br.com.api_mediway.caregiver.dto.response.CaregiverResponseDTO;
 import br.com.api_mediway.caregiver.CaregiverService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CaregiverController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> registerCaregiver(
             @PathVariable UUID userId,
-            @RequestBody CaregiverRequestDTO dto
+            @RequestBody @Valid CaregiverRequestDTO dto
     ) {
         log.info("[CAREGIVER] POST /caregiver/register/{}", userId);
         caregiverService.registerCaregiver(userId, dto);

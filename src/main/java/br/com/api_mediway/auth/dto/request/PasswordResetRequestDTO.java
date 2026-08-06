@@ -1,4 +1,6 @@
 package br.com.api_mediway.auth.dto.request;
 
-public record PasswordResetRequestDTO(String identifier) {
+import jakarta.validation.constraints.NotBlank;
+
+public record PasswordResetRequestDTO(@NotBlank String identifier) {
 }

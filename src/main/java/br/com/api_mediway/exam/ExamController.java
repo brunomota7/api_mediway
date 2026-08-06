@@ -5,6 +5,7 @@ import br.com.api_mediway.exam.dto.request.UpdateExamDTO;
 import br.com.api_mediway.exam.dto.response.ExamResponseDTO;
 import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
 import br.com.api_mediway.exam.ExamService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class ExamController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_CUIDADOR')")
     public ResponseEntity<Void> scheduleExam(
             @PathVariable UUID patientId,
-            @RequestBody ExamRequestDTO dto
+            @RequestBody @Valid ExamRequestDTO dto
     ) {
         log.info("[EXAM] POST /exam/schedule/{} - Scheduling new exam", patientId);
         examService.scheduleExam(patientId, dto);
@@ -92,7 +93,7 @@ public class ExamController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_CUIDADOR')")
     public ResponseEntity<Void> updateExamInfo(
             @PathVariable Long examId,
-            @RequestBody UpdateExamDTO dto
+            @RequestBody @Valid UpdateExamDTO dto
     ) {
         log.info("[EXAM] PUT /exam/{}/update - Updating exam info", examId);
         examService.updateExamInfo(examId, dto);

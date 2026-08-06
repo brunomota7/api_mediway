@@ -4,6 +4,7 @@ import br.com.api_mediway.doctor.dto.request.AddInfosDoctorDTO;
 import br.com.api_mediway.doctor.dto.request.UpdateDoctorInfosDTO;
 import br.com.api_mediway.doctor.dto.response.DoctorResponseDTO;
 import br.com.api_mediway.doctor.DoctorService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class DoctorController {
     // cadastra as informações do médico autenticado
     @PostMapping("/add-infos")
     @PreAuthorize("hasAuthority('SCOPE_MEDICO')")
-    public ResponseEntity<Void> registerInfosDoctor(@RequestBody AddInfosDoctorDTO dto,
+    public ResponseEntity<Void> registerInfosDoctor(@RequestBody @Valid AddInfosDoctorDTO dto,
                                                     JwtAuthenticationToken token) {
         log.info("[Doctor] POST /doctor/add-infos - Starting doctor information registration");
         doctorService.registerInfosDoctor(dto, token);
@@ -72,7 +73,7 @@ public class DoctorController {
     @PutMapping("/update-infos")
     @PreAuthorize("hasAuthority('SCOPE_MEDICO')")
     public ResponseEntity<Void> updateInfosDoctor(
-            @RequestBody UpdateDoctorInfosDTO dto,
+            @RequestBody @Valid UpdateDoctorInfosDTO dto,
             JwtAuthenticationToken token
     ) {
         log.info("[DOCTOR] PUT /doctor/update-infos - Updating doctor infos");

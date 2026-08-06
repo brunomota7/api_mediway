@@ -2,25 +2,28 @@ package br.com.api_mediway.medication.dto.request;
 
 import br.com.api_mediway.medication.enums.MedicationStatus;
 import br.com.api_mediway.medication.enums.MedicationType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalTime;
 import java.util.List;
 
 public record MedicationRequestDTO(
-        String nome,
-        MedicationType tipo,
+        @NotBlank String nome,
+        @NotNull MedicationType tipo,
         String nomeReferencia,
         String descricao,
         String concentracao,
         String quantidade,
 
-        List<String> dias,
-        LocalTime hora,
+        @NotEmpty List<String> dias,
+        @NotNull LocalTime hora,
         String gaveta,
-        Integer estoque,
+        @NotNull @PositiveOrZero Integer estoque,
 
-        MedicationStatus status,
-        Long medicineBoxId
+        @NotNull MedicationStatus status,
+        @NotNull Long medicineBoxId
 ) {
 }
-

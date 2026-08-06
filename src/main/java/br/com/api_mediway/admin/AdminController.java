@@ -3,6 +3,7 @@ package br.com.api_mediway.admin;
 import br.com.api_mediway.admin.dto.request.CreateAdminDto;
 import br.com.api_mediway.user.dto.response.UserResponseDTO;
 import br.com.api_mediway.admin.AdminService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class AdminController {
 
     // registro de novo administrador
     @PostMapping("/register-admin")
-    public ResponseEntity<Void> registerAdmin(@RequestBody CreateAdminDto dto) {
+    public ResponseEntity<Void> registerAdmin(@RequestBody @Valid CreateAdminDto dto) {
         log.info("[ADMIN] POST /admin/register-admin - Starting registration for new admin email={}", dto.email());
         adminService.createUserAdmin(dto);
         log.info("[ADMIN] POST /admin/register-admin - Admin registered successfully email={}", dto.email());

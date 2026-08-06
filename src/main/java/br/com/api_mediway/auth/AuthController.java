@@ -5,6 +5,7 @@ import br.com.api_mediway.auth.dto.response.LoginResponseDTO;
 import br.com.api_mediway.auth.dto.response.TokenTempResetDTO;
 import br.com.api_mediway.auth.AuthService;
 import br.com.api_mediway.auth.PasswordResetCodeService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class AuthController {
 
     // registro de novo usuário
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody CreateUserDTO dto) {
+    public ResponseEntity<Void> register(@RequestBody @Valid CreateUserDTO dto) {
         log.info("[AUTH] POST /auth/register - Starting registration for email={}", dto.email());
         authService.toRegister(dto);
         log.info("[AUTH] POST /auth/register - User successfully registered with email={}", dto.email());
@@ -40,7 +41,7 @@ public class AuthController {
 
     // login do usuário
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO dto) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
         log.info("[AUTH] POST /auth/login - Starting login for email={}", dto.email());
         var response = authService.toLogin(dto);
         log.info("[AUTH] POST /auth/login - Login successful for email={}", dto.email());
@@ -49,7 +50,7 @@ public class AuthController {
 
     // solicitação de redefinição de senha
     @PostMapping("/request-reset")
-    public ResponseEntity<Void> requestPasswordReset(@RequestBody PasswordResetRequestDTO dto) {
+    public ResponseEntity<Void> requestPasswordReset(@RequestBody @Valid PasswordResetRequestDTO dto) {
         log.info("[AUTH] POST /auth/request-reset - Starting password reset request for identifier={}", dto.identifier());
         authService.requestPasswordReset(dto.identifier());
         log.info("[AUTH] POST /auth/request-reset - Password reset code sent successfully");
@@ -58,7 +59,7 @@ public class AuthController {
 
     // valida o código de redefinição de senha
     @PostMapping("/validate-code")
-    public ResponseEntity<TokenTempResetDTO> validateResetCode(@RequestBody PasswordResetCodeDTO dto) {
+    public ResponseEntity<TokenTempResetDTO> validateResetCode(@RequestBody @Valid PasswordResetCodeDTO dto) {
         log.info("[AUTH] POST /auth/validate-code - Validating password reset code");
         var tempToken = passwordResetCodeService.validateResetCode(dto.code());
         log.info("[AUTH] POST /auth/validate-code - Code validated successfully, temporary token generated");
@@ -69,7 +70,7 @@ public class AuthController {
     @PreAuthorize("hasAuthority('SCOPE_RESET')")
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(
-            @RequestBody PasswordResetConfirmDTO dto,
+            @RequestBody @Valid PasswordResetConfirmDTO dto,
             JwtAuthenticationToken token
     ) {
         log.info("[AUTH] POST /auth/reset-password - Starting password reset process");

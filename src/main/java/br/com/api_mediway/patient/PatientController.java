@@ -5,6 +5,7 @@ import br.com.api_mediway.patient.dto.request.UpdatePatientInfosDTO;
 import br.com.api_mediway.patient.dto.response.PatientResponseInfosDTO;
 import br.com.api_mediway.patient.enums.ConditionStatusPatient;
 import br.com.api_mediway.patient.PatientService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class PatientController {
     @PostMapping("/add-infos")
     @PreAuthorize("hasAuthority('SCOPE_PACIENTE')")
     public ResponseEntity<Void> registerInfosPatient(
-            @RequestBody AddInfosPatientsDTO dto,
+            @RequestBody @Valid AddInfosPatientsDTO dto,
             JwtAuthenticationToken token
     ) {
         log.info("[PATIENT] POST /patients/add-infos - Starting patient information registration");
@@ -73,7 +74,7 @@ public class PatientController {
     @PutMapping("/update-infos")
     @PreAuthorize("hasAuthority('SCOPE_PACIENTE')")
     public ResponseEntity<Void> updateInfosPatient(
-            @RequestBody UpdatePatientInfosDTO dto,
+            @RequestBody @Valid UpdatePatientInfosDTO dto,
             JwtAuthenticationToken token
     ) {
         log.info("[PATIENT] PUT /patients/update-infos - Updating patient infos");
