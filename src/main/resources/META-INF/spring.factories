@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationContextInitializer=\
+br.com.api_mediway.common.config.FlywayEarlyMigrationInitializer
