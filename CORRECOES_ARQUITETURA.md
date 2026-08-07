@@ -18,7 +18,8 @@
 | C3 | Ausência de `@Valid` nos controllers | ✅ Resolvido | 2026-08-06 |
 | C4 | `ddl-auto=update` sem Flyway/Liquibase | ✅ Resolvido | 2026-08-06 |
 | C5 | Sem rate limiting no reset de senha | ✅ Resolvido | 2026-08-07 |
-| I1–I8 | Ver README.md | ⬜ Não iniciado | — |
+| I1 | `@Data` (Lombok) em entidades JPA | ✅ Resolvido | 2026-08-07 |
+| I2–I8 | Ver README.md | ⬜ Não iniciado | — |
 | S1–S6 | Ver README.md | ⬜ Não iniciado | — |
 
 ---
@@ -301,6 +302,92 @@ executado e o único teste do projeto (`contextLoads`) segue falhando por
 motivo pré-existente e não relacionado a esta mudança (MySQL do
 `docker-compose.yml` não estava rodando no ambiente onde a verificação foi
 feita).
+
+---
+
+## I1 — `@Data` (Lombok) em entidades JPA — anti-padrão conhecido
+
+- **Status:** ✅ Resolvido
+- **Data:** 2026-08-07
+
+### O que foi alterado
+
+- Nas 9 entidades listadas no README (`User`, `PatientInfos`, `DoctorInfos`,
+  `CaregiverInfos`, `Consultation`, `Exam`, `Medication`, `Vaccine`,
+  `MedicineBox`), a troca de `@Data` por `@Getter @Setter` já havia sido
+  feita em sessão anterior. Esta correção completou o que faltava da ação
+  recomendada:
+  - Adicionado `@EqualsAndHashCode(of = "<campo de id>")` em cada entidade
+    (ex.: `@EqualsAndHashCode(of = "userId")` em `User`,
+    `@EqualsAndHashCode(of = "patientInfoId")` em `PatientInfos`, etc.),
+    restringindo `equals()`/`hashCode()` exclusivamente à chave primária em
+    vez de todos os campos.
+  - Adicionado `@ToString(exclude = {...})` em cada entidade, excluindo
+    todas as associações JPA (`@OneToOne`, `@ManyToOne`, `@OneToMany`,
+    `@ManyToMany` e coleções mapeadas), tanto as `LAZY` quanto a única
+    coleção `EAGER` (`User.roles`), para nenhuma delas ser tocada por um
+    `toString()` automático.
+  - Removido o import não utilizado `lombok.Data` que havia sobrado em
+    `Exam.java` da troca anterior.
+
+  Exclusões aplicadas por entidade (todas são associações — os demais
+  campos, escalares, continuam no `toString()`):
+  - `User`: `roles`
+  - `PatientInfos`: `user`, `doctor`, `consultations`, `exams`,
+    `medicineBox`, `medications`, `vaccines`
+  - `DoctorInfos`: `user`, `consultations`, `patients`
+  - `CaregiverInfos`: `user`, `patients`
+  - `Consultation`: `patientInfos`, `doctorInfos`
+  - `Exam`: `patientInfos`
+  - `Medication`: `patientInfos`, `medicineBox`
+  - `Vaccine`: `patientInfos`
+  - `MedicineBox`: `patientInfos`, `medications`
+
+### Por quê
+
+`@Data` gera `equals()`/`hashCode()`/`toString()` considerando **todos** os
+campos da classe, inclusive associações `LAZY` e coleções. Isso tem dois
+efeitos práticos ruins em entidades JPA:
+
+1. Chamar `equals()`, `hashCode()` ou `toString()` fora de uma sessão
+   Hibernate ativa (ex.: em um DTO/log depois que a entidade já "saiu" do
+   contexto de persistência) pode lançar `LazyInitializationException`, já
+   que o Lombok tenta acessar o valor real da associação lazy para incluí-la
+   na comparação/representação.
+2. Em relacionamentos bidirecionais (`PatientInfos <-> MedicineBox <->
+   Medication`, `PatientInfos <-> DoctorInfos`, etc.), o `toString()`
+   gerado por uma entidade chamaria o `toString()` da entidade
+   relacionada, que por sua vez chamaria de volta — um `StackOverflowError`
+   em potencial sempre que alguém logasse a entidade diretamente (`log.info(
+   "{}", patientInfos)`, por exemplo, algo comum em debug).
+
+Restringir `equals()`/`hashCode()` à chave primária também corrige um
+problema mais sutil: com `@Data`, duas entidades **novas** (ainda não
+persistidas, com todos os campos de negócio iguais mas sem `id`) seriam
+`equals()` uma da outra, e duas entidades já persistidas ficariam
+"diferentes" caso qualquer campo de negócio fosse alterado depois de
+carregadas — quebrando a identidade em `Set`/`Map` e em coleções JPA
+(`orphanRemoval`, coleções gerenciadas), que dependem de `equals()`/
+`hashCode()` estáveis ao longo do ciclo de vida da entidade. Usar somente a
+chave primária (que só existe depois de persistida, mas nunca muda depois
+disso) é o padrão recomendado pelo próprio time do Hibernate para essa
+situação.
+
+### Verificação
+
+`mvn compile` (offline, usando o repositório Maven local já populado)
+executado com sucesso após as mudanças nas 9 entidades. Não havia testes
+automatizados cobrindo `equals()`/`hashCode()`/`toString()` das entidades
+para rodar (ver item I5 do README).
+
+### Observação para uma futura sessão
+
+`PasswordResetCode.java` (`auth/entity/PasswordResetCode.java`) também usa
+`@Data` e não estava no escopo original do I1 no README. O risco ali é
+menor — a única associação é um `@ManyToOne User user` com fetch padrão
+`EAGER`, não `LAZY` — mas é o mesmo anti-padrão e vale aplicar a mesma
+correção (`@Getter @Setter` + `@EqualsAndHashCode(of = "id")` +
+`@ToString(exclude = "user")`) numa próxima passada.
 
 ---
 

@@ -5,7 +5,10 @@ import br.com.api_mediway.patient.entity.PatientInfos;
 
 import br.com.api_mediway.common.enums.ConsultationAndExmStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +16,10 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "tb_consultations")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "consultationId")
+@ToString(exclude = {"patientInfos", "doctorInfos"})
 public class Consultation {
 
     @Id

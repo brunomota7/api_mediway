@@ -5,14 +5,20 @@ import br.com.api_mediway.patient.entity.PatientInfos;
 import br.com.api_mediway.vaccine.enums.VaccineDoseType;
 import br.com.api_mediway.vaccine.enums.VaccineStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_vaccines")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "vaccineId")
+@ToString(exclude = "patientInfos")
 public class Vaccine {
 
     @Id

@@ -11,7 +11,10 @@ import br.com.api_mediway.vaccine.entity.Vaccine;
 import br.com.api_mediway.patient.enums.ConditionStatusPatient;
 import br.com.api_mediway.patient.enums.Gender;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +22,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_patients_info")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "patientInfoId")
+@ToString(exclude = {"user", "doctor", "consultations", "exams", "medicineBox", "medications", "vaccines"})
 public class PatientInfos {
 
     @Id

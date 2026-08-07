@@ -6,14 +6,20 @@ import br.com.api_mediway.patient.entity.PatientInfos;
 import br.com.api_mediway.medication.enums.MedicationStatus;
 import br.com.api_mediway.medication.enums.MedicationType;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalTime;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_medications")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "medicationId")
+@ToString(exclude = {"patientInfos", "medicineBox"})
 public class Medication {
 
     @Id

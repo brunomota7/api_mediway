@@ -6,14 +6,20 @@ import br.com.api_mediway.user.entity.User;
 
 import br.com.api_mediway.common.enums.DoctorAndCaregiverAvailability;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_doctors")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "doctorInfosId")
+@ToString(exclude = {"user", "consultations", "patients"})
 public class DoctorInfos {
 
     @Id

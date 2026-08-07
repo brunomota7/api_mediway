@@ -2,7 +2,10 @@ package br.com.api_mediway.user.entity;
 
 import br.com.api_mediway.auth.dto.request.LoginRequestDTO;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
@@ -10,7 +13,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_users")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "userId")
+@ToString(exclude = "roles")
 public class User {
 
     @Id

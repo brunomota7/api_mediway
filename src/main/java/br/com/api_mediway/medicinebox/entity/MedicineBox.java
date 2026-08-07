@@ -4,14 +4,20 @@ import br.com.api_mediway.medication.entity.Medication;
 import br.com.api_mediway.patient.entity.PatientInfos;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_medicine_box")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "medicineBoxId")
+@ToString(exclude = {"patientInfos", "medications"})
 public class MedicineBox {
 
     @Id
