@@ -17,7 +17,7 @@
 | C2 | Endpoint público expondo dados médicos (`/consultation/by-status`) | ✅ Resolvido | 2026-08-05 |
 | C3 | Ausência de `@Valid` nos controllers | ✅ Resolvido | 2026-08-06 |
 | C4 | `ddl-auto=update` sem Flyway/Liquibase | ✅ Resolvido | 2026-08-06 |
-| C5 | Sem rate limiting no reset de senha | ⬜ Não iniciado | — |
+| C5 | Sem rate limiting no reset de senha | ✅ Resolvido | 2026-08-07 |
 | I1–I8 | Ver README.md | ⬜ Não iniciado | — |
 | S1–S6 | Ver README.md | ⬜ Não iniciado | — |
 
@@ -236,16 +236,80 @@ Flyway deveria trazer.
 
 ---
 
+## C5 — Ausência de rate limiting no fluxo de reset de senha (brute-force)
+
+- **Status:** ✅ Resolvido
+- **Data:** 2026-08-07
+
+### O que foi alterado
+
+- Adicionada a dependência `com.bucket4j:bucket4j-core:8.10.1` ao `pom.xml`.
+- Criada a classe `common/exception/RateLimitExceededException.java` e o
+  respectivo handler `GlobalExceptionHandle.handleRateLimitExceeded`, que
+  devolve `429 Too Many Requests` no formato padrão de erro já usado pelo
+  resto da API.
+- Adicionado `UtilsService.getClientIp(HttpServletRequest)`, que resolve o IP
+  do cliente a partir da conexão TCP (`request.getRemoteAddr()`). O header
+  `X-Forwarded-For` foi deliberadamente **não** usado: como o projeto não
+  declara nenhum proxy reverso confiável (`server.forward-headers-strategy`
+  não está configurado), confiar nesse header permitiria que um atacante o
+  forjasse para burlar o rate limiting.
+- Criada a classe `auth/PasswordResetRateLimiter.java` (`@Component`), que
+  mantém um bucket Bucket4j por IP para cada um dos dois endpoints do fluxo:
+  - `POST /auth/request-reset`: 5 requisições por hora por IP.
+  - `POST /auth/validate-code`: 5 tentativas por minuto por IP.
+- `AuthController.requestPasswordReset` e `AuthController.validateResetCode`
+  passaram a receber `HttpServletRequest`, consultar o limiter antes de
+  chamar o service correspondente e lançar `RateLimitExceededException`
+  quando o limite é excedido (logado como evento `[SECURITY]`).
+
+### Por quê
+
+O código de reset de senha tem apenas 6 dígitos numéricos (1.000.000 de
+combinações) e, antes desta correção, não havia nenhum limite de tentativas
+por IP/usuário nem lockout — um atacante conseguiria automatizar requisições
+para `POST /auth/validate-code` e quebrar o código em minutos, assumindo
+qualquer conta da plataforma. Limitar `validate-code` a 5 tentativas por
+minuto por IP torna inviável varrer o espaço de códigos (o código expira em
+3 minutos, então cada janela de validade permite poucas tentativas por IP) e
+`request-reset` também foi limitado para impedir o uso do endpoint para
+disparar e-mails em massa (flood) ou gerar códigos novos continuamente para
+reiniciar a janela de tentativas.
+
+Optou-se por um limitador em memória por IP (`ConcurrentHashMap` de buckets)
+em vez de, por exemplo, um lockout de conta amarrado ao código: o DTO de
+`POST /auth/validate-code` recebe só o código, não o identificador do
+usuário, então não é possível saber a que conta uma tentativa inválida
+pertence antes de descobrir o código certo. O rate limiting por IP resolve o
+problema descrito no C5 (brute-force automatizado) sem exigir mudança de
+contrato da API. A entropia do código (sugestão de usar UUID parcial/TOTP)
+não foi alterada nesta correção — é uma melhoria de longo prazo listada como
+"considerar" no README, e trocá-la implicaria mudar o formato do código que
+já é enviado por e-mail/SMS aos usuários.
+
+### Limitação conhecida
+
+Os buckets são mantidos em memória local (`ConcurrentHashMap`), então o rate
+limit é por instância da aplicação — não é compartilhado entre múltiplas
+réplicas rodando atrás de um load balancer. Para um deploy horizontal, seria
+necessário migrar para um backend distribuído (ex.: Bucket4j + Redis).
+
+### Verificação
+
+`mvn compile` executado com sucesso após as mudanças. `mvn test` foi
+executado e o único teste do projeto (`contextLoads`) segue falhando por
+motivo pré-existente e não relacionado a esta mudança (MySQL do
+`docker-compose.yml` não estava rodando no ambiente onde a verificação foi
+feita).
+
+---
+
 <!--
 Modelo para novas entradas:
 
 ## <ID> — <título curto>
 
 - **Status:** ⬜ Não iniciado / 🟡 Em andamento / ✅ Resolvido
-
-
-
-
 
 ### O que foi alterado
 - ...

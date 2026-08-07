@@ -5,6 +5,9 @@ import br.com.api_mediway.auth.dto.response.LoginResponseDTO;
 import br.com.api_mediway.auth.dto.response.TokenTempResetDTO;
 import br.com.api_mediway.auth.AuthService;
 import br.com.api_mediway.auth.PasswordResetCodeService;
+import br.com.api_mediway.common.exception.RateLimitExceededException;
+import br.com.api_mediway.common.util.UtilsService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,11 +26,14 @@ public class AuthController {
 
     private final AuthService authService;
     private final PasswordResetCodeService passwordResetCodeService;
+    private final PasswordResetRateLimiter passwordResetRateLimiter;
 
     public AuthController(AuthService authService,
-                          PasswordResetCodeService passwordResetCodeService) {
+                          PasswordResetCodeService passwordResetCodeService,
+                          PasswordResetRateLimiter passwordResetRateLimiter) {
         this.authService = authService;
         this.passwordResetCodeService = passwordResetCodeService;
+        this.passwordResetRateLimiter = passwordResetRateLimiter;
     }
 
     // registro de novo usuário
@@ -50,7 +56,14 @@ public class AuthController {
 
     // solicitação de redefinição de senha
     @PostMapping("/request-reset")
-    public ResponseEntity<Void> requestPasswordReset(@RequestBody @Valid PasswordResetRequestDTO dto) {
+    public ResponseEntity<Void> requestPasswordReset(@RequestBody @Valid PasswordResetRequestDTO dto,
+                                                       HttpServletRequest request) {
+        String clientIp = UtilsService.getClientIp(request);
+        if (!passwordResetRateLimiter.tryConsumeRequestReset(clientIp)) {
+            log.warn("[AUTH] POST /auth/request-reset - Rate limit exceeded for ip={}", clientIp);
+            throw new RateLimitExceededException("Too many password reset requests");
+        }
+
         log.info("[AUTH] POST /auth/request-reset - Starting password reset request for identifier={}", dto.identifier());
         authService.requestPasswordReset(dto.identifier());
         log.info("[AUTH] POST /auth/request-reset - Password reset code sent successfully");
@@ -59,7 +72,14 @@ public class AuthController {
 
     // valida o código de redefinição de senha
     @PostMapping("/validate-code")
-    public ResponseEntity<TokenTempResetDTO> validateResetCode(@RequestBody @Valid PasswordResetCodeDTO dto) {
+    public ResponseEntity<TokenTempResetDTO> validateResetCode(@RequestBody @Valid PasswordResetCodeDTO dto,
+                                                                 HttpServletRequest request) {
+        String clientIp = UtilsService.getClientIp(request);
+        if (!passwordResetRateLimiter.tryConsumeValidateCode(clientIp)) {
+            log.warn("[AUTH] POST /auth/validate-code - Rate limit exceeded for ip={}", clientIp);
+            throw new RateLimitExceededException("Too many code validation attempts");
+        }
+
         log.info("[AUTH] POST /auth/validate-code - Validating password reset code");
         var tempToken = passwordResetCodeService.validateResetCode(dto.code());
         log.info("[AUTH] POST /auth/validate-code - Code validated successfully, temporary token generated");

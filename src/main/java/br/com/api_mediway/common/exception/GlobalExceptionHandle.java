@@ -4,6 +4,7 @@ import br.com.api_mediway.common.exception.ErrorResponseDTO;
 import br.com.api_mediway.common.exception.CannotDeleteAdminException;
 import br.com.api_mediway.common.exception.CannotRemoveAdminRoleException;
 import br.com.api_mediway.common.exception.EmailSendException;
+import br.com.api_mediway.common.exception.RateLimitExceededException;
 import br.com.api_mediway.common.exception.SlotAlreadyExistsException;
 import br.com.api_mediway.common.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -68,6 +69,14 @@ public class GlobalExceptionHandle {
         log.warn("[SECURITY] Access denied for request {}", request.getDescription(false));
         return buildResponse(HttpStatus.FORBIDDEN, "Access denied",
                 "Você não tem permissão para executar essa ação", request);
+    }
+
+    // ========== 429 - Limite de requisições excedido (rate limiting) ==========
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<ErrorResponseDTO> handleRateLimitExceeded(RateLimitExceededException ex, WebRequest request) {
+        log.warn("[SECURITY] Rate limit exceeded for request {} - {}", request.getDescription(false), ex.getMessage());
+        return buildResponse(HttpStatus.TOO_MANY_REQUESTS, "Too many requests",
+                "Muitas tentativas. Aguarde alguns instantes antes de tentar novamente.", request);
     }
 
     // ========== 400 - Falha de validação (@Valid em @RequestBody) ==========
